@@ -3,6 +3,13 @@ program miprograma {
 	
 	x = 5;
 	
-	println 6;
+	num = 10;
+	
+	println num;
+	
+	println x;
 
+	x = num;
+	
+	println x;
 }

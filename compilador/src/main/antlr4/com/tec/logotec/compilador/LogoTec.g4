@@ -1,5 +1,14 @@
 grammar LogoTec;
 
+@parser::header {
+	import java.util.Map;
+	import java.util.HashMap;
+}
+
+@parser::members {
+	Map<String, Object> symbolTable = new HashMap<String, Object>();
+}
+
 
 program: PROGRAM ID BRACKET_OPEN 
 	sentence*
@@ -8,12 +17,18 @@ program: PROGRAM ID BRACKET_OPEN
 sentence: var_decl | var_assign | println;
 
 var_decl: VAR ID SEMICOLON
-	{System.out.println("Var");};
+	{symbolTable.put($ID.text, 0);};
+	
 var_assign: ID ASSIGN expression SEMICOLON
-	{System.out.println("Assign");};
+	{symbolTable.put($ID.text, $expression.value);};
+	
 println: PRINTLN expression SEMICOLON
-	{System.out.println("print");};
-expression: NUMBER | ID;
+	{System.out.println($expression.value);};
+	
+expression returns [Object value]:
+	 NUMBER {$value = Integer.parseInt($NUMBER.text);} 
+	 | 
+	 ID {$value = symbolTable.get($ID.text);};
 
 
 PROGRAM: 'program';
