@@ -18,7 +18,7 @@ public class Main {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		LogoTecParser parser = new LogoTecParser(tokens);
 
-		LogoTecParser.StartContext tree = parser.start();
+		LogoTecParser.ProgramContext tree = parser.program();
 
 		LogoTecCustomVisitor visitor = new LogoTecCustomVisitor();
 		visitor.visit(tree);
