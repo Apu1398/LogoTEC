@@ -1,11 +1,7 @@
 define test(){
-	if(true){
-		int num;
-		num = 5;
-		while(3){
-			println 6;
-		}
-	}
+	int num;
+	num = 5;
+	println 2*2+8;
 }
 
 

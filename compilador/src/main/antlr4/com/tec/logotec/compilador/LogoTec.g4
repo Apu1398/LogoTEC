@@ -25,15 +25,9 @@ function:
 
 statement: 
 	  var_declaration
-	  {
-	  	System.out.println("var decl");
-	  }
 	| var_assignment
 	| conditional
 	| loop
-	  {
-		System.out.println("loop");
-	  }
 	| function_call
 	| println
 ;
@@ -58,7 +52,7 @@ var_assignment:
 	
 
 conditional: 
-	IF PAR_OPEN BOOLEAN PAR_CLOSE BRACKET_OPEN 
+	IF PAR_OPEN expression PAR_CLOSE BRACKET_OPEN 
 	statement* 
 	BRACKET_CLOSE
 	(
@@ -66,25 +60,16 @@ conditional:
 	statement* 
 	BRACKET_CLOSE	
 	)?
-	{
-		System.out.println("Cond in");
-	}
 ;
 	
 loop:
 	WHILE PAR_OPEN NUMBER PAR_CLOSE BRACKET_OPEN 
 	statement*   
 	BRACKET_CLOSE
-	{
-		System.out.println("loop in");
-	}
 ;
 	
 function_call:
 	ID PAR_OPEN (NUMBER)? PAR_CLOSE SEMICOLON
-	{
-		System.out.println("Func call in");
-	}
 ;
 
 
@@ -96,6 +81,24 @@ println:
 	
 	
 expression returns [Object value]:
+	t1=factor {$value = (int)$t1.value;} 
+	(
+	(PLUS t2=factor {$value = (int)$value + (int)$t2.value;})
+	|
+	(MINUS t2=factor  {$value = (int)$value - (int)$t2.value;})
+	)*
+;
+
+factor returns [Object value]: 
+	t1=term {$value = (int)$t1.value;} 
+	(
+	(MULT t2=term {$value = (int)$value * (int)$t2.value;})
+	|
+	(DIV t2=term  {$value = (int)$value / (int)$t2.value;})
+	)*
+;
+	
+term returns [Object value]:
 	ID 
 	{
 	 	$value = symbolTable.get($ID.text);
@@ -110,8 +113,9 @@ expression returns [Object value]:
 	}
 	|BOOLEAN
 	{
-		$value = $BOOLEAN.text;
+		$value = Boolean.parseBoolean($BOOLEAN.text);
 	}
+	| PAR_OPEN expression PAR_CLOSE
 ;
 
 
@@ -125,7 +129,7 @@ PRINTLN: 'println';
 IF: 'if';
 ELSE: 'else';
 WHILE: 'while';
-BOOLEAN: 'true' | 'false';
+
 
 
 PLUS: '+';
@@ -156,6 +160,7 @@ SEMICOLON: ';';
 
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
 
+BOOLEAN: 'true' | 'false';
 STRING: ["a-zA-Z_][a-zA-Z0-9_"]+;
 NUMBER: [0-9]+;
 
