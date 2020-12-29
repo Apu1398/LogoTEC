@@ -1,15 +1,11 @@
-program miprograma {
-	var x;
-	
-	x = 5;
-	
-	num = 10;
-	
-	println num;
-	
-	println x;
-
-	x = num;
-	
-	println x;
+define test(){
+	if(true){
+		int num;
+		num = 5;
+		while(3){
+			println 6;
+		}
+	}
 }
+
+
