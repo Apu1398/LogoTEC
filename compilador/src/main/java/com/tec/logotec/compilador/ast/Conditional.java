@@ -22,7 +22,7 @@ public class Conditional implements ASTNode {
 
 	@Override
 	public Object execute(Map<String, Object> symbolTable) {
-		if((boolean)condition.execute(null)) {
+		if((boolean)condition.execute(symbolTable)) {
 			for (ASTNode statement : ifBody) {
 				statement.execute(symbolTable);
 			}

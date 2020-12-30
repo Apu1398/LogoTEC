@@ -24,7 +24,7 @@ public class ErrorListener implements ANTLRErrorListener {
 	@Override
 	public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
 			String msg, RecognitionException e) {
-		consola.setText(consola.getText() + msg + "\n");		
+		consola.setText("Line: " + line + consola.getText() + msg + "\n");		
 	}
 
 	@Override

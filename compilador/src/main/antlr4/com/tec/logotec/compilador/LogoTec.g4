@@ -126,13 +126,13 @@ logic returns [ASTNode node]:
 	  		 	
 comparison returns [ASTNode node]:
 		 C1=expression {$node = $C1.node;}
-		 (GT C2=expression {$node = new Greater($C1.node,$C2.node);}
+		 ((GT C2=expression {$node = new Greater($C1.node,$C2.node);}
 		 |LT C2=expression {$node = new Lower($C1.node,$C2.node);}
 		 |GEQ C2=expression {$node = new GreaterEqual($C1.node,$C2.node);}
 		 |LEQ C2=expression {$node = new LowerEqual($C1.node,$C2.node);}
 		 |EQ C2=expression {$node = new Equal($C1.node,$C2.node);}
 		 |DIF C2=expression {$node = new Different($C1.node,$C2.node);})
-		 |NOT C2=expression {$node = new Not($C2.node);}
+		 |NOT C2=expression {$node = new Not($C2.node);})*
 		 
 ;	
 	
