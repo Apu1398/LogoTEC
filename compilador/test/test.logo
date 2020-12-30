@@ -1,7 +1,10 @@
-define (){
+define miFunction(){
+	int x;
+	x = 5;
+	x = x + 1;
 	if(false){
 		println 2+2*4;
 	}else{
-		println 0;
+		println x;
 	}
 }

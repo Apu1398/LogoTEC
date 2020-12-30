@@ -1,6 +1,7 @@
 package com.tec.logotec.compilador.ast;
 
 import java.util.List;
+import java.util.Map;
 
 public class Loop implements ASTNode {
 
@@ -16,10 +17,10 @@ public class Loop implements ASTNode {
 
 
 	@Override
-	public Object execute() {
-		while((boolean)condition.execute()) {
+	public Object execute(Map<String, Object> symbolTable) {
+		while((boolean)condition.execute(null)) {
 			for (ASTNode statement : body) {
-				statement.execute();
+				statement.execute(symbolTable);
 			}
 		}
 		return null;

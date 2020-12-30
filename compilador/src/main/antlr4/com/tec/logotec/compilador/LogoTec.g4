@@ -16,22 +16,43 @@ program:
 	DEFINE ID PAR_OPEN ID? PAR_CLOSE
 	{
 		List<ASTNode> body = new ArrayList<ASTNode>();
+		//Se crea aca pues este es el punto de entrada de la BNF
+		Map<String, Object> symbolTable = new HashMap<String, Object>(); 
 	} 
 	BRACKET_OPEN 
 	( statement { body.add($statement.node); } )*
 	BRACKET_CLOSE
 	{
 		for(ASTNode statement: body){
-			statement.execute();
+			statement.execute(symbolTable);
 		}
 	}
 ;
 
 statement returns [ASTNode node]: 
-	  conditional {$node = $conditional.node; }
-	| loop 		  {$node = $loop.node;        }
-	| println 	  {$node = $println.node;     }
+	  var_declaration	{$node = $var_declaration.node;}
+	| var_assignment	{$node = $var_assignment.node; }
+	| conditional 		{$node = $conditional.node;    }
+	| loop 		  		{$node = $loop.node;           }
+	| println 	  		{$node = $println.node;        }
 ;
+
+
+var_declaration returns [ASTNode node]: 
+	TYPE ID SEMICOLON
+	{
+		$node = new VarDeclaration($ID.text);
+	}
+;
+	
+	
+var_assignment returns [ASTNode node]: 
+	ID ASSIGN expression SEMICOLON
+	{
+		$node = new VarAssignment($ID.text, $expression.node);
+	}
+;
+
 
 conditional returns [ASTNode node]: 
 	IF PAR_OPEN expression PAR_CLOSE 
@@ -96,7 +117,11 @@ factor returns [ASTNode node]:
 ;
 	
 term returns [ASTNode node]:
-	NUMBER 
+	ID 
+	{
+	 	$node = new VarReference($ID.text);
+	}
+	|NUMBER 
 	{
 	 	$node = new Constant(Integer.parseInt($NUMBER.text));
 	} 

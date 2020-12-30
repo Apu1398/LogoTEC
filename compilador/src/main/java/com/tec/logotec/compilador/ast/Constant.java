@@ -1,5 +1,7 @@
 package com.tec.logotec.compilador.ast;
 
+import java.util.Map;
+
 public class Constant implements ASTNode {
 
 	private Object object;
@@ -14,7 +16,7 @@ public class Constant implements ASTNode {
 
 
 	@Override
-	public Object execute() {
+	public Object execute(Map<String, Object> symbolTable) {
 		return object;
 	}
 
