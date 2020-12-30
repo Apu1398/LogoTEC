@@ -18,7 +18,7 @@ public class Loop implements ASTNode {
 
 	@Override
 	public Object execute(Map<String, Object> symbolTable) {
-		while((boolean)condition.execute(null)) {
+		while((boolean)condition.execute(symbolTable)) {
 			for (ASTNode statement : body) {
 				statement.execute(symbolTable);
 			}

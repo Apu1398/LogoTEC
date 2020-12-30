@@ -2,7 +2,7 @@ define miFunction(){
 	int x;
 	x = 5;
 	x = x + 1;
-	if(false){
+	if(2<5&&10<20){
 		println 2+2*4;
 	}else{
 		println x;

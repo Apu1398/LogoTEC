@@ -55,29 +55,29 @@ var_assignment returns [ASTNode node]:
 
 
 conditional returns [ASTNode node]: 
-	IF PAR_OPEN expression PAR_CLOSE 
+	IF PAR_OPEN logic PAR_CLOSE 
 	{
-		List<ASTNode> iBody = new ArrayList<ASTNode>();
+		List<ASTNode> ifBody = new ArrayList<ASTNode>();
 	}
 	BRACKET_OPEN 
-	( s1=statement { iBody.add($s1.node); } )* 
+	( s1=statement { ifBody.add($s1.node); } )* 
 	BRACKET_CLOSE
 	
 	ELSE
 	{
-		List<ASTNode> eBody = new ArrayList<ASTNode>();
+		List<ASTNode> elseBody = new ArrayList<ASTNode>();
 	} 
 	BRACKET_OPEN 
-	( s2=statement { eBody.add($s2.node); } )* 
+	( s2=statement { elseBody.add($s2.node); } )* 
 	BRACKET_CLOSE	
 	
 	{
-		$node = new Conditional($expression.node, iBody, eBody);
+		$node = new Conditional($logic.node, ifBody, elseBody);
 	}
 ;
 	
 loop returns [ASTNode node]:
-	WHILE PAR_OPEN expression PAR_CLOSE 
+	WHILE PAR_OPEN logic PAR_CLOSE 
 	{
 		List<ASTNode> body = new ArrayList<ASTNode>();
 	}
@@ -85,7 +85,7 @@ loop returns [ASTNode node]:
 	( statement { body.add($statement.node); } )*   
 	BRACKET_CLOSE
 	{
-		$node = new Loop($expression.node, body);
+		$node = new Loop($logic.node, body);
 	}
 ;
 	
@@ -96,7 +96,27 @@ println returns [ASTNode node]:
 	{
 		$node  = new Println($expression.node);
 	};
-	
+
+logic returns [ASTNode node]:
+		 f1=comparison {$node = $f1.node;}
+		 (
+		 AND f2=comparison {$node = new And($f1.node,$f2.node);}
+		 |
+		 OR f2=comparison {$node = new Or($f1.node,$f2.node);}
+		 )*
+;
+	  		 	
+comparison returns [ASTNode node]:
+		 C1=expression {$node = $C1.node;}
+		 (GT C2=expression {$node = new Greater($C1.node,$C2.node);}
+		 |LT C2=expression {$node = new Lower($C1.node,$C2.node);}
+		 |GEQ C2=expression {$node = new GreaterEqual($C1.node,$C2.node);}
+		 |LEQ C2=expression {$node = new LowerEqual($C1.node,$C2.node);}
+		 |EQ C2=expression {$node = new Equal($C1.node,$C2.node);}
+		 |DIF C2=expression {$node = new Different($C1.node,$C2.node);})
+		 |NOT C2=expression {$node = new Not($C2.node);}
+		 
+;	
 	
 expression returns [ASTNode node]:
 	t1=factor {$node = $t1.node;} 
@@ -115,6 +135,7 @@ factor returns [ASTNode node]:
 	(DIV t2=term  {$node = new Division($node, $t2.node);})
 	)*
 ;
+	
 	
 term returns [ASTNode node]:
 	ID 
@@ -166,7 +187,7 @@ LT: '<';
 GEQ: '>=';
 LEQ: '<=';
 EQ: '==';
-NEQ: '!=';
+DIF: '!=';
 
 ASSIGN: '=';
 
