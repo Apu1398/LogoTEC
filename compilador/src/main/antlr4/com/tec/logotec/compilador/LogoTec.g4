@@ -5,11 +5,23 @@ grammar LogoTec;
 	import java.util.HashMap;
 	import java.util.List;
 	import java.util.ArrayList;
+	import java.awt.TextArea;
 	import com.tec.logotec.compilador.ast.*;
+	import com.tec.logotec.compilador.turtle.*;
 }
 
 @parser::members {
 	Map<String, Object> symbolTable = new HashMap<String, Object>();
+	private TextArea consoleOutput;
+	private boolean canWrite;
+	Turtle theTurtle;
+	
+	public LogoTecParser(TokenStream input, TextArea consoleOutput, boolean canWrite, Turtle turtle){
+		this(input);
+		this.consoleOutput = consoleOutput;
+		this.canWrite = canWrite;
+		this.theTurtle = turtle;
+	}
 }
 
 program:
@@ -35,6 +47,7 @@ statement returns [ASTNode node]:
 	| conditional 		{$node = $conditional.node;    }
 	| loop 		  		{$node = $loop.node;           }
 	| println 	  		{$node = $println.node;        }
+	|avanza             {$node = $avanza.node;		   }
 ;
 
 
@@ -96,6 +109,11 @@ println returns [ASTNode node]:
 	{
 		$node  = new Println($expression.node);
 	};
+
+
+avanza returns [ASTNode node]: AVANZA expression SEMICOLON{
+			$node = new Avanza($expression.node, theTurtle);
+};
 
 logic returns [ASTNode node]:
 		 f1=comparison {$node = $f1.node;}
@@ -166,6 +184,7 @@ term returns [ASTNode node]:
 DEFINE: 'define';
 TYPE: 'int' |'String'| 'bool';
 PRINTLN: 'println';
+AVANZA:'avanza' | 'av'; 
 
 IF: 'if';
 ELSE: 'else';

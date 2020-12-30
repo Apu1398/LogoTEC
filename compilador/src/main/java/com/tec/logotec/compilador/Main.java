@@ -1,30 +1,22 @@
 
 package com.tec.logotec.compilador;
-import java.io.IOException;
+import java.awt.EventQueue;
 
-import org.antlr.v4.runtime.ANTLRFileStream;
-import org.antlr.v4.runtime.CommonTokenStream;
+import com.tec.logotec.compilador.window.VentanaPrincipal;
 
 public class Main {
 
-	private static final String EXTENSION = "logo";
-
-	public static void main(String[] args) throws IOException {
-		String program = args.length > 1 ? args[1] : "test/test." + EXTENSION;
-
-		System.out.println("Interpreting file " + program);
-
-		LogoTecLexer lexer = new LogoTecLexer(new ANTLRFileStream(program));
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		LogoTecParser parser = new LogoTecParser(tokens);
-
-		LogoTecParser.ProgramContext tree = parser.program();
-
-		LogoTecCustomVisitor visitor = new LogoTecCustomVisitor();
-		visitor.visit(tree);
-
-		System.out.println("Interpretation finished");
-
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaPrincipal window = new VentanaPrincipal();
+					window.frmLogotec.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 }
