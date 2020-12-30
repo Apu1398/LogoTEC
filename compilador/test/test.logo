@@ -1,7 +1,7 @@
-define test(){
-	int num;
-	num = 5;
-	println 2*2+8;
+define (){
+	if(false){
+		println 2+2*4;
+	}else{
+		println 0;
+	}
 }
-
-

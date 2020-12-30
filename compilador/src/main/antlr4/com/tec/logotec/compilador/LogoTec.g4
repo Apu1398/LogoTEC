@@ -3,119 +3,114 @@ grammar LogoTec;
 @parser::header {
 	import java.util.Map;
 	import java.util.HashMap;
+	import java.util.List;
+	import java.util.ArrayList;
+	import com.tec.logotec.compilador.ast.*;
 }
 
 @parser::members {
 	Map<String, Object> symbolTable = new HashMap<String, Object>();
 }
 
-
-program: definition*;
-
-definition: function | statement;
-
-function:
-	DEFINE ID PAR_OPEN (ID)? PAR_CLOSE BRACKET_OPEN 
-	statement*
+program:
+	DEFINE ID PAR_OPEN ID? PAR_CLOSE
+	{
+		List<ASTNode> body = new ArrayList<ASTNode>();
+	} 
+	BRACKET_OPEN 
+	( statement { body.add($statement.node); } )*
 	BRACKET_CLOSE
 	{
-		System.out.println("Func def");
+		for(ASTNode statement: body){
+			statement.execute();
+		}
 	}
 ;
 
-statement: 
-	  var_declaration
-	| var_assignment
-	| conditional
-	| loop
-	| function_call
-	| println
+statement returns [ASTNode node]: 
+	  conditional {$node = $conditional.node; }
+	| loop 		  {$node = $loop.node;        }
+	| println 	  {$node = $println.node;     }
 ;
 
-
-var_declaration: 
-	TYPE ID SEMICOLON
+conditional returns [ASTNode node]: 
+	IF PAR_OPEN expression PAR_CLOSE 
 	{
-		symbolTable.put($ID.text, 0);
-		System.out.println("Var decl in");
+		List<ASTNode> iBody = new ArrayList<ASTNode>();
 	}
-;
-	
-	
-var_assignment: 
-	ID ASSIGN expression SEMICOLON
-	{
-		symbolTable.put($ID.text, $expression.value);
-		System.out.println("var assig in");
-	}
-;
-	
-
-conditional: 
-	IF PAR_OPEN expression PAR_CLOSE BRACKET_OPEN 
-	statement* 
+	BRACKET_OPEN 
+	( s1=statement { iBody.add($s1.node); } )* 
 	BRACKET_CLOSE
-	(
-	ELSE BRACKET_OPEN 
-	statement* 
+	
+	ELSE
+	{
+		List<ASTNode> eBody = new ArrayList<ASTNode>();
+	} 
+	BRACKET_OPEN 
+	( s2=statement { eBody.add($s2.node); } )* 
 	BRACKET_CLOSE	
-	)?
+	
+	{
+		$node = new Conditional($expression.node, iBody, eBody);
+	}
 ;
 	
-loop:
-	WHILE PAR_OPEN NUMBER PAR_CLOSE BRACKET_OPEN 
-	statement*   
+loop returns [ASTNode node]:
+	WHILE PAR_OPEN expression PAR_CLOSE 
+	{
+		List<ASTNode> body = new ArrayList<ASTNode>();
+	}
+	BRACKET_OPEN 
+	( statement { body.add($statement.node); } )*   
 	BRACKET_CLOSE
+	{
+		$node = new Loop($expression.node, body);
+	}
 ;
 	
-function_call:
-	ID PAR_OPEN (NUMBER)? PAR_CLOSE SEMICOLON
-;
 
 
-println: 
+println returns [ASTNode node]: 
 	PRINTLN expression SEMICOLON
 	{
-		System.out.println($expression.value);
+		$node  = new Println($expression.node);
 	};
 	
 	
-expression returns [Object value]:
-	t1=factor {$value = (int)$t1.value;} 
+expression returns [ASTNode node]:
+	t1=factor {$node = $t1.node;} 
 	(
-	(PLUS t2=factor {$value = (int)$value + (int)$t2.value;})
-	|
-	(MINUS t2=factor  {$value = (int)$value - (int)$t2.value;})
-	)*
+	(PLUS t2=factor {$node = new Addition($node, $t2.node);})
+	| 
+	(MINUS t2=factor {$node = new Subtraction($node, $t2.node);})
+	)*   
 ;
 
-factor returns [Object value]: 
-	t1=term {$value = (int)$t1.value;} 
+factor returns [ASTNode node]: 
+	t1=term {$node = $t1.node;} 
 	(
-	(MULT t2=term {$value = (int)$value * (int)$t2.value;})
+	(MULT t2=term {$node = new Multiplication($node, $t2.node);})
 	|
-	(DIV t2=term  {$value = (int)$value / (int)$t2.value;})
+	(DIV t2=term  {$node = new Division($node, $t2.node);})
 	)*
 ;
 	
-term returns [Object value]:
-	ID 
+term returns [ASTNode node]:
+	NUMBER 
 	{
-	 	$value = symbolTable.get($ID.text);
-	}
-	|NUMBER 
-	{
-	 	$value = Integer.parseInt($NUMBER.text);
+	 	$node = new Constant(Integer.parseInt($NUMBER.text));
 	} 
 	|STRING
 	{
-		$value = $STRING.text;	
+		$node = new Constant($STRING.text);	
 	}
 	|BOOLEAN
 	{
-		$value = Boolean.parseBoolean($BOOLEAN.text);
+		$node = new Constant(Boolean.parseBoolean($BOOLEAN.text));
 	}
-	| PAR_OPEN expression PAR_CLOSE
+	| PAR_OPEN 
+	  expression { $node = $expression.node; }
+	  PAR_CLOSE
 ;
 
 
@@ -158,9 +153,10 @@ PAR_CLOSE: ')';
 
 SEMICOLON: ';';
 
+BOOLEAN: 'true' | 'false';
+
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
 
-BOOLEAN: 'true' | 'false';
 STRING: ["a-zA-Z_][a-zA-Z0-9_"]+;
 NUMBER: [0-9]+;
 
