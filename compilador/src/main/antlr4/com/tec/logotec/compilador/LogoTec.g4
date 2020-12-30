@@ -9,14 +9,13 @@ grammar LogoTec;
 }
 
 @parser::members {
-	Map<String, Object> symbolTable = new HashMap<String, Object>();
+	Map<String, Object> symbolTable2 = new HashMap<String, Object>();
 }
 
 program:
 	DEFINE ID PAR_OPEN ID? PAR_CLOSE
 	{
 		List<ASTNode> body = new ArrayList<ASTNode>();
-		//Se crea aca pues este es el punto de entrada de la BNF
 		Map<String, Object> symbolTable = new HashMap<String, Object>(); 
 	} 
 	BRACKET_OPEN 
@@ -108,12 +107,14 @@ logic returns [ASTNode node]:
 	  		 	
 comparison returns [ASTNode node]:
 		 C1=expression {$node = $C1.node;}
-		 (GT C2=expression {$node = new Greater($C1.node,$C2.node);}
+		 (
+		 GT C2=expression {$node = new Greater($C1.node,$C2.node);}
 		 |LT C2=expression {$node = new Lower($C1.node,$C2.node);}
 		 |GEQ C2=expression {$node = new GreaterEqual($C1.node,$C2.node);}
 		 |LEQ C2=expression {$node = new LowerEqual($C1.node,$C2.node);}
 		 |EQ C2=expression {$node = new Equal($C1.node,$C2.node);}
-		 |DIF C2=expression {$node = new Different($C1.node,$C2.node);})
+		 |DIF C2=expression {$node = new Different($C1.node,$C2.node);}
+		 )
 		 |NOT C2=expression {$node = new Not($C2.node);}
 		 
 ;	
