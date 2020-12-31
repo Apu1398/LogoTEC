@@ -4,16 +4,16 @@ import com.tec.logotec.compilador.window.CompilerState;
 
 import com.tec.logotec.compilador.turtle.Turtle;
 
-public class Avanza implements ASTNode {
+public class PonY implements ASTNode {
 	
-	private ASTNode data;
+	private ASTNode dataY;
 	private Turtle theTurtle;
 	
 	
 
-	public Avanza(ASTNode data, Turtle turtle) {
+	public PonY(ASTNode dataY, Turtle turtle) {
 		super();
-		this.data = data;
+		this.dataY = dataY;
 		this.theTurtle = turtle;
 	}
 
@@ -21,9 +21,10 @@ public class Avanza implements ASTNode {
 
 	@Override
 	public Object execute(Map<String, Object> symbolTable) {
-		int movement = (int)data.execute(symbolTable);
+		int y = (int)dataY.execute(symbolTable);
+		
 		if (CompilerState.getCompilerStatus() && CompilerState.canIDoSomething()) {
-			theTurtle.forward(movement);
+			theTurtle.goTo(theTurtle.getLocation().getX(), y);
 		}		
 		return null;
 	}

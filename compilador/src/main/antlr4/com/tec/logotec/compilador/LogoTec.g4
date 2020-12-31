@@ -13,22 +13,26 @@ grammar LogoTec;
 @parser::members {
 	Map<String, Object> symbolTable = new HashMap<String, Object>();
 	private TextArea consoleOutput;
-	private boolean canWrite;
 	Turtle theTurtle;
+	World theWorld;
 	
-	public LogoTecParser(TokenStream input, TextArea consoleOutput, boolean canWrite, Turtle turtle){
+	public LogoTecParser(TokenStream input, TextArea consoleOutput, Turtle turtle, World world){
 		this(input);
 		this.consoleOutput = consoleOutput;
-		this.canWrite = canWrite;
 		this.theTurtle = turtle;
+		this.theWorld = world;
+		this.theTurtle.goTo(0, 0);
+		this.theWorld.eraseGround();
+		this.theTurtle.goTo(0,0);
+		this.theTurtle.setHeading(0);
 	}
+	Map<String, Object> symbolTable2 = new HashMap<String, Object>();
 }
 
 program:
 	DEFINE ID PAR_OPEN ID? PAR_CLOSE
 	{
 		List<ASTNode> body = new ArrayList<ASTNode>();
-		//Se crea aca pues este es el punto de entrada de la BNF
 		Map<String, Object> symbolTable = new HashMap<String, Object>(); 
 	} 
 	BRACKET_OPEN 
@@ -47,7 +51,10 @@ statement returns [ASTNode node]:
 	| conditional 		{$node = $conditional.node;    }
 	| loop 		  		{$node = $loop.node;           }
 	| println 	  		{$node = $println.node;        }
-	|avanza             {$node = $avanza.node;		   }
+	| avanza            {$node = $avanza.node;		   }
+	| retrocede         {$node = $retrocede.node;      }
+	| giraderecha       {$node = $giraderecha.node;    }
+	| giraizquierda     {$node = $giraizquierda.node;  }
 ;
 
 
@@ -107,12 +114,24 @@ loop returns [ASTNode node]:
 println returns [ASTNode node]: 
 	PRINTLN expression SEMICOLON
 	{
-		$node  = new Println($expression.node);
+		$node  = new Println($expression.node, consoleOutput);
 	};
 
 
 avanza returns [ASTNode node]: AVANZA expression SEMICOLON{
 			$node = new Avanza($expression.node, theTurtle);
+};
+
+retrocede returns [ASTNode node]: RETROCEDE expression SEMICOLON{
+			$node = new Retrocede($expression.node, theTurtle);
+};
+
+giraderecha returns [ASTNode node]: GIRADERECHA expression SEMICOLON{
+			$node = new GiraDerecha($expression.node, theTurtle);
+};
+
+giraizquierda returns [ASTNode node]: GIRAIZQUIERDA expression SEMICOLON{
+			$node = new GiraIzquierda($expression.node, theTurtle);
 };
 
 logic returns [ASTNode node]:
@@ -126,15 +145,13 @@ logic returns [ASTNode node]:
 	  		 	
 comparison returns [ASTNode node]:
 		 C1=expression {$node = $C1.node;}
-		 ((GT C2=expression {$node = new Greater($C1.node,$C2.node);}
+		 (GT C2=expression {$node = new Greater($C1.node,$C2.node);}
 		 |LT C2=expression {$node = new Lower($C1.node,$C2.node);}
 		 |GEQ C2=expression {$node = new GreaterEqual($C1.node,$C2.node);}
 		 |LEQ C2=expression {$node = new LowerEqual($C1.node,$C2.node);}
 		 |EQ C2=expression {$node = new Equal($C1.node,$C2.node);}
-		 |DIF C2=expression {$node = new Different($C1.node,$C2.node);})
-		 |NOT C2=expression {$node = new Not($C2.node);})*
-		 
-;	
+		 |DIF C2=expression {$node = new Different($C1.node,$C2.node);}
+		 |NOT C2=expression {$node = new Not($C2.node);})*;	
 	
 expression returns [ASTNode node]:
 	t1=factor {$node = $t1.node;} 
@@ -185,6 +202,9 @@ DEFINE: 'define';
 TYPE: 'int' |'String'| 'bool';
 PRINTLN: 'println';
 AVANZA:'avanza' | 'av'; 
+RETROCEDE:'retrocede' | 're';
+GIRADERECHA: 'giraderecha' | 'gd';
+GIRAIZQUIERDA: 'giraizquierda' | 'gi'; 
 
 IF: 'if';
 ELSE: 'else';

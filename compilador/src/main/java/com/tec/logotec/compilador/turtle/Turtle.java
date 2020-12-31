@@ -34,6 +34,7 @@ public class Turtle {
 	private boolean isdown;
 	// private GeneralPath trail; // not used
 	private Color color;
+	public Color userColor;
 	private double shellSize;
 	private int pause = 200;
 
@@ -396,7 +397,7 @@ public class Turtle {
 	}
 
 	
-	private void pause() {
+	public void pause() {
 		try { Thread.sleep(this.pause); } catch (InterruptedException e) { }
 	}
 

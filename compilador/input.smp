@@ -1,7 +1,4 @@
-define miFunction(){
-	if(true){
-		av 60;
-	}else{
-		println 0;
-	}
+define miprograma(){
+avanza 60 + 6;
+
 }

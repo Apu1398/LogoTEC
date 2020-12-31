@@ -23,7 +23,6 @@ import java.awt.TextArea;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
-import java.awt.Color;
 
 public class VentanaPrincipal {
 
@@ -113,25 +112,36 @@ public class VentanaPrincipal {
 		theWorld = new World();
 	    theWorld.setLocation(550,0);
 		theTurtle = new Turtle(theWorld);
-		frmLogotec.getContentPane().add(theWorld);
-		
-		
-		 
+		frmLogotec.getContentPane().add(theWorld);	 
 		 
 	}
 	
 	private void compilar() throws IOException {
-
-		//theWorld.eraseGround();
-		//frmLogotec.repaint();
+		
+		consoleOutputComponent.setText("");
+		CompilerState.dontDoNothing();
+		CompilerState.clearErrors();
+		doMagic();
+		
+		if(CompilerState.getCompilerStatus()) {
+			consoleOutputComponent.setText( consoleOutputComponent.getText() + "Compiled succesful");
+		}
+		
 	}
 	
 	private void ejecutar() throws IOException{
 		
-		Color color = new Color(0,255,0);
 		consoleOutputComponent.setText("");
-		theTurtle.setColor(color);
+		CompilerState.doSome();
+		CompilerState.clearErrors();
+		doMagic();
 		
+		if(CompilerState.getCompilerStatus()) {
+			consoleOutputComponent.setText( consoleOutputComponent.getText() + "Compiled succesful");
+		}
+	}
+	
+	private void doMagic() throws IOException {
 		FileWriter myWriter = new FileWriter("input.smp");
 	    myWriter.write(codeEditingComponent.getText());
 	    myWriter.close();
@@ -141,7 +151,7 @@ public class VentanaPrincipal {
 
 		LogoTecLexer lexer = new LogoTecLexer(new ANTLRFileStream(program));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		LogoTecParser parser = new LogoTecParser(tokens,consoleOutputComponent, true, theTurtle);
+		LogoTecParser parser = new LogoTecParser(tokens,consoleOutputComponent, theTurtle, theWorld);
 		parser.removeErrorListeners();
 		
 	    ANTLRErrorListener errorListener = new ErrorListener(consoleOutputComponent);
@@ -149,6 +159,8 @@ public class VentanaPrincipal {
 
 		LogoTecParser.ProgramContext tree = parser.program();
 		LogoTecCustomVisitor visitor = new LogoTecCustomVisitor();
-		visitor.visit(tree);		
+		System.out.println(tree.toStringTree(parser));
+		visitor.visit(tree);
+		
 	}
 }
