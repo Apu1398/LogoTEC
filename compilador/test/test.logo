@@ -20,7 +20,7 @@ define fun2(n1,n2){
 }
 
 int n3
-n3 = -11
+n3 = 11
 
 fun2(n3-8,2)
 
@@ -28,5 +28,3 @@ while( n3>0 ){
 	println n3
 	n3 = n3 - 1
 	}
-
-
