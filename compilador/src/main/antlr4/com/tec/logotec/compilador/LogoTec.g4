@@ -12,15 +12,13 @@ grammar LogoTec;
 	Map<String, Object> symbolTable2 = new HashMap<String, Object>();
 }
 
+
 program:
-	DEFINE ID PAR_OPEN ID? PAR_CLOSE
 	{
 		List<ASTNode> body = new ArrayList<ASTNode>();
-		Map<String, Object> symbolTable = new HashMap<String, Object>(); 
+		Context symbolTable = new Context();
 	} 
-	BRACKET_OPEN 
-	( statement { body.add($statement.node); } )*
-	BRACKET_CLOSE
+	( statement { body.add($statement.node);} )*
 	{
 		for(ASTNode statement: body){
 			statement.execute(symbolTable);
@@ -28,17 +26,45 @@ program:
 	}
 ;
 
+
 statement returns [ASTNode node]: 
-	  var_declaration	{$node = $var_declaration.node;}
+	  function			{$node = $function.node;	   }
+	|function_call		{$node = $function_call.node;  }
+	| var_declaration	{$node = $var_declaration.node;}
 	| var_assignment	{$node = $var_assignment.node; }
 	| conditional 		{$node = $conditional.node;    }
 	| loop 		  		{$node = $loop.node;           }
 	| println 	  		{$node = $println.node;        }
 ;
 
+function returns [ASTNode node]:
+	{
+		List<ASTNode> body = new ArrayList<ASTNode>();
+		List<String> parameters = new ArrayList<String>();
+	}
+	DEFINE funcName=ID PAR_OPEN (par1=ID{parameters.add($par1.text);} (COMMA par2=ID{parameters.add($par2.text);})*)? PAR_CLOSE 
+	BRACKET_OPEN 
+	( statement { body.add($statement.node); } )*
+	BRACKET_CLOSE
+	{
+		$node = new Function($funcName.text, parameters, body); 
+	}
+;
+
+
+function_call returns [ASTNode node]
+:
+	{
+		List<ASTNode> parameters = new ArrayList<ASTNode>();
+	}
+
+	 ID PAR_OPEN (t1=expression{parameters.add($t1.node);} (COMMA t2=expression{parameters.add($t2.node);})*)? PAR_CLOSE 
+	{$node = new FunctionCall($ID.text,parameters); }
+;
+
 
 var_declaration returns [ASTNode node]: 
-	TYPE ID SEMICOLON
+	TYPE ID 
 	{
 		$node = new VarDeclaration($ID.text);
 	}
@@ -46,12 +72,11 @@ var_declaration returns [ASTNode node]:
 	
 	
 var_assignment returns [ASTNode node]: 
-	ID ASSIGN expression SEMICOLON
+	ID ASSIGN expression 
 	{
 		$node = new VarAssignment($ID.text, $expression.node);
 	}
 ;
-
 
 conditional returns [ASTNode node]: 
 	IF PAR_OPEN logic PAR_CLOSE 
@@ -91,7 +116,7 @@ loop returns [ASTNode node]:
 
 
 println returns [ASTNode node]: 
-	PRINTLN expression SEMICOLON
+	PRINTLN expression 
 	{
 		$node  = new Println($expression.node);
 	};
@@ -108,6 +133,7 @@ logic returns [ASTNode node]:
 comparison returns [ASTNode node]:
 		 C1=expression {$node = $C1.node;}
 		 (
+		 (
 		 GT C2=expression {$node = new Greater($C1.node,$C2.node);}
 		 |LT C2=expression {$node = new Lower($C1.node,$C2.node);}
 		 |GEQ C2=expression {$node = new GreaterEqual($C1.node,$C2.node);}
@@ -116,11 +142,12 @@ comparison returns [ASTNode node]:
 		 |DIF C2=expression {$node = new Different($C1.node,$C2.node);}
 		 )
 		 |NOT C2=expression {$node = new Not($C2.node);}
+		 )*
 		 
 ;	
 	
 expression returns [ASTNode node]:
-	t1=factor {$node = $t1.node;} 
+	t1=factor {$node = $t1.node;}
 	(
 	(PLUS t2=factor {$node = new Addition($node, $t2.node);})
 	| 
@@ -137,7 +164,7 @@ factor returns [ASTNode node]:
 	)*
 ;
 	
-	
+
 term returns [ASTNode node]:
 	ID 
 	{
@@ -191,6 +218,8 @@ EQ: '==';
 DIF: '!=';
 
 ASSIGN: '=';
+COMMA: ',';
+
 
 BRACKET_OPEN: '{';
 BRACKET_CLOSE: '}';

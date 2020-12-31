@@ -1,7 +1,6 @@
 package com.tec.logotec.compilador.ast;
 
 import java.util.List;
-import java.util.Map;
 
 public class Conditional implements ASTNode {
 
@@ -21,7 +20,7 @@ public class Conditional implements ASTNode {
 
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
+	public Object execute(Context symbolTable) {
 		if((boolean)condition.execute(symbolTable)) {
 			for (ASTNode statement : ifBody) {
 				statement.execute(symbolTable);

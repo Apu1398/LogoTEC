@@ -1,14 +1,32 @@
-define miFunction(){
-	int x;
-	x = 5;
+define miFun(num1,num2,num3){
+	int x
+	int y
+	x = num1+num2
+	y= x + num3
 	while( x>0 ){
-	println x;
-	x = x - 1;
+	println "Apu"
+	x = x - 1
 	}
-	
-	if(x == 1){
-		println 10;
+	println y
+}
+
+define fun2(n1,n2){
+	miFun(n1, n2, 7)
+	if(n1 < n2){
+		println "Josue"
 	}else{
-		println x+10;
+		println "Juan"
 	}
 }
+
+int n3
+n3 = -11
+
+fun2(n3-8,2)
+
+while( n3>0 ){
+	println n3
+	n3 = n3 - 1
+	}
+
+

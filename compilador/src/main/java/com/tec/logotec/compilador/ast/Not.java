@@ -1,7 +1,5 @@
 package com.tec.logotec.compilador.ast;
 
-import java.util.Map;
-
 public class Not implements ASTNode {
 
 	private ASTNode operand1;
@@ -12,7 +10,7 @@ public class Not implements ASTNode {
 	}
 	
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
+	public Object execute(Context symbolTable) {
 		return !(Boolean)operand1.execute(symbolTable);
 	}
 

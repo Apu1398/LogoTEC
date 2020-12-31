@@ -1,7 +1,5 @@
 package com.tec.logotec.compilador.ast;
 
-import java.util.Map;
-
 public class VarReference implements ASTNode {
 
 	private String name;
@@ -17,7 +15,7 @@ public class VarReference implements ASTNode {
 
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
+	public Object execute(Context symbolTable) {
 		return symbolTable.get(name);		
 	}
 
