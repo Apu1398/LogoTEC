@@ -1,22 +1,56 @@
-int num
-num = 11
+Haz num 10
+Inic num = 5
 
-println "num global es:"
-println num
+repite (5)
+[
+	println "Dentro del repite"
+]
 
-define miFun(num){
-	int x
-	x = num
-	println "num en funcion es:"
-	println num
+while(num > 0)
+[
+	println "Dentro del while"
+	Inic num = num - 1
+]
 
-}
+HazMientras
+[
+	println "Dentro del DoWhile" 
+	Inic num = num - 1
+](num > 0)
 
-println "num global luego de fun def es:"
-println num
 
-miFun(8)
+SiSino(2>1)
+[
+	println "Dentro del SiSino.Condicion Verdadera."
+]	
+[
+	println "Dentro del SiSino.Condicion Falsa."
+]
 
-println "num global luego func call es:"
+Si(3>1)
+[
+	println "Dentro del IF"
+]
 
-println num
+PARA funcion1(numero1)
+[
+	SiSino(numero1>0)
+	[
+		println "Numero1 es positivo:"
+	]
+	[
+		println "Numero1 es negativo:"
+	]
+	println numero1
+]
+FIN
+
+
+println "--------Llamada a la funcion con num positivo-------------"
+funcion1(5)
+println "--------Llamada a la funcion con num positivo-----------"
+
+
+println "--------Llamada a la funcion con num negativo-------------"
+funcion1(5-8)
+println "--------Llamada a la funcion con num negativo-----------"
