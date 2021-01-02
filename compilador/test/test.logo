@@ -1,5 +1,15 @@
+//Linea comentario
+
+/*
+Bloque para hacer comentarios
+en varias lineas
+*/
+
 Haz num 10
-Inic num = 5
+Inic num = 5+8/4-2*3+(6-2)
+
+println "Resultado de la operacion: "
+println num
 
 repite (5)
 [
