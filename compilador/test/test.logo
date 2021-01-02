@@ -52,5 +52,5 @@ println "--------Llamada a la funcion con num positivo-----------"
 
 
 println "--------Llamada a la funcion con num negativo-------------"
-funcion1(5-8)
+funcion1(-8)
 println "--------Llamada a la funcion con num negativo-----------"

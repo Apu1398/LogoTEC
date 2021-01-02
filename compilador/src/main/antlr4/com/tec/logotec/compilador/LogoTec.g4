@@ -200,7 +200,7 @@ comparison returns [ASTNode node]:
 ;	
 	
 expression returns [ASTNode node]:
-	t1=factor {$node = $t1.node;}
+	t1=factor {$node = $t1.node;} 
 	(
 	(PLUS t2=factor {$node = new Addition($node, $t2.node);})
 	| 
@@ -227,6 +227,10 @@ term returns [ASTNode node]:
 	{
 	 	$node = new Constant(Integer.parseInt($NUMBER.text));
 	} 
+	|MINUS NUMBER 
+	{
+		$node = new Constant(-Integer.parseInt($NUMBER.text));
+	}
 	|STRING
 	{
 		$node = new Constant($STRING.text);	
