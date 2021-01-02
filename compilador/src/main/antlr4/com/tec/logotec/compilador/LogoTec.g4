@@ -233,7 +233,7 @@ BOOLEAN: 'true' | 'false';
 
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
 
-STRING: ["a-zA-Z_][a-zA-Z0-9_"]+;
+STRING: '"' ~('"')* '"';
 NUMBER: [0-9]+;
 
 WS
