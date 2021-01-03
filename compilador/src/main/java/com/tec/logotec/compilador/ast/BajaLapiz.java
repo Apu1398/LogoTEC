@@ -10,8 +10,9 @@ public class BajaLapiz implements ASTNode {
 	
 	
 
-	public BajaLapiz() {
+	public BajaLapiz(Turtle theTurtle) {
 		super();
+		this.theTurtle = theTurtle;
 	}
 
 

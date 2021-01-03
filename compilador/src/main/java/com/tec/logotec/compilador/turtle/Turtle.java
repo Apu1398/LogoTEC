@@ -30,7 +30,7 @@ public class Turtle {
 	private World world;
 	private double theta;
 
-	private Point2D.Double location;
+	public Point2D.Double location;
 	private boolean isdown;
 	// private GeneralPath trail; // not used
 	private Color color;
@@ -67,6 +67,7 @@ public class Turtle {
 		this.theta = 0;
 		this.world = w;
 		this.color = Turtle.base[Turtle.baseIndex];
+		this.userColor = this.color;
 		Turtle.baseIndex = (Turtle.baseIndex+1) % Turtle.base.length; 
 		this.penWidth = 1;
 		this.isdown = true;
@@ -337,7 +338,7 @@ public class Turtle {
 	 * @return The location of the turtle. (0,0) is the center of the screen, +x is rightward, +y is downward.
 	 */
 	public Point2D getLocation() {
-		return new Point2D.Double(this.location.x - world.centerX, (-this.location.y - world.centerY));
+		return new Point2D.Double(this.location.x - world.centerX, (this.location.y - world.centerY));
 	}
 
 

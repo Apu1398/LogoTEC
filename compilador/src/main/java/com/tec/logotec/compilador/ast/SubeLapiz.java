@@ -10,8 +10,9 @@ public class SubeLapiz implements ASTNode {
 	
 	
 
-	public SubeLapiz() {
+	public SubeLapiz(Turtle theTurtle) {
 		super();
+		this.theTurtle = theTurtle;
 	}
 
 

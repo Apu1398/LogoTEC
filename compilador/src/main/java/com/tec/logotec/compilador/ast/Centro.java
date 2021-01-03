@@ -10,7 +10,7 @@ public class Centro implements ASTNode {
 	
 	
 
-	public Centro(ASTNode data, Turtle turtle) {
+	public Centro(Turtle turtle) {
 		super();
 		this.theTurtle = turtle;
 	}

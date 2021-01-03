@@ -17,7 +17,7 @@ public class Rumbo implements ASTNode {
 
 	@Override
 	public Object execute(Map<String, Object> symbolTable) {
-		return theTurtle.getHeading();
+		return Math.round(theTurtle.getHeading());
 	}
 
 }

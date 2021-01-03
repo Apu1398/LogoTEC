@@ -10,8 +10,9 @@ public class QuitaGoma implements ASTNode {
 	
 	
 
-	public QuitaGoma() {
+	public QuitaGoma(Turtle theTurtle) {
 		super();
+		this.theTurtle = theTurtle;
 	}
 
 

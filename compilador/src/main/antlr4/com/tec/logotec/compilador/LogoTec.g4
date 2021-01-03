@@ -55,6 +55,16 @@ statement returns [ASTNode node]:
 	| retrocede         {$node = $retrocede.node;      }
 	| giraderecha       {$node = $giraderecha.node;    }
 	| giraizquierda     {$node = $giraizquierda.node;  }
+	| ponpos		    {$node = $ponpos.node;         }
+	| ponrumbo		    {$node = $ponrumbo.node;       }
+	| rumbo		   		{$node = $rumbo.node;          }
+	| pongoma   		{$node = $pongoma.node;        }
+	| quitagoma	   		{$node = $quitagoma.node;      }
+	| bajalapiz   		{$node = $bajalapiz.node;      }
+	| subelapiz   		{$node = $subelapiz.node;      }
+	| poncolorlapiz     {$node = $poncolorlapiz.node;  }
+	| centro            {$node = $centro.node;         }
+	| espera            {$node = $espera.node;         }
 ;
 
 
@@ -134,6 +144,61 @@ giraizquierda returns [ASTNode node]: GIRAIZQUIERDA expression SEMICOLON{
 			$node = new GiraIzquierda($expression.node, theTurtle);
 };
 
+ponpos returns [ASTNode node]: 
+			(PONPOS CUAD_OPEN t1 = expression t2=expression CUAD_CLOSE SEMICOLON
+		    |
+		    PONPOS t1=expression t2=expression SEMICOLON) {
+		    	$node = new PonPos($t1.node, $t2.node, theTurtle);
+		    };
+		    
+ponrumbo returns [ASTNode node]: PONRUMBO expression SEMICOLON{
+			$node = new PonRumbo($expression.node, theTurtle);
+};
+
+
+rumbo returns [ASTNode node]: RUMBO SEMICOLON{
+			$node = new Rumbo(theTurtle);
+};
+
+
+ponx returns [ASTNode node]: PONX expression SEMICOLON{
+			$node = new PonX($expression.node, theTurtle);
+};
+
+pony returns [ASTNode node]: PONY expression SEMICOLON{
+			$node = new PonY($expression.node, theTurtle);
+};
+
+pongoma returns [ASTNode node]: PONGOMA SEMICOLON{
+			$node = new PonGoma(theTurtle);
+};
+
+quitagoma returns [ASTNode node]: QUITAGOMA SEMICOLON{
+			$node = new QuitaGoma(theTurtle);
+};
+
+bajalapiz returns [ASTNode node]: BAJALAPIZ SEMICOLON{
+			$node = new BajaLapiz(theTurtle);
+};
+
+subelapiz returns [ASTNode node]: SUBELAPIZ SEMICOLON{
+			$node = new SubeLapiz(theTurtle);
+};
+
+poncolorlapiz returns [ASTNode node]: PONCOLORLAPIZ COLOR SEMICOLON{
+	        $node = new PonColorLapiz($COLOR.text,theTurtle);
+};
+
+centro returns [ASTNode node]: CENTRO SEMICOLON{
+	        $node = new Centro(theTurtle);
+};	  
+
+espera returns [ASTNode node]: ESPERA expression SEMICOLON{
+			$node = new Espera($expression.node, theTurtle);
+};  
+		    
+ 
+
 logic returns [ASTNode node]:
 		 f1=comparison {$node = $f1.node;}
 		 (
@@ -205,12 +270,26 @@ AVANZA:'avanza' | 'av';
 RETROCEDE:'retrocede' | 're';
 GIRADERECHA: 'giraderecha' | 'gd';
 GIRAIZQUIERDA: 'giraizquierda' | 'gi'; 
+PONPOS: 'ponpos' | 'ponxy';
+PONRUMBO: 'ponrumbo';
+RUMBO: 'rumbo';
+PONX: 'ponx';
+PONY: 'pony';
+PONGOMA: 'goma' | 'go';
+QUITAGOMA: 'quitagoma';
+BAJALAPIZ: 'bajalapiz' | 'bl';
+SUBELAPIZ: 'subelapiz' | 'sb';
+PONCOLORLAPIZ: 'poncolorlapiz'|'poncl';
+CENTRO: 'centro';
+ESPERA: 'espera';
+
 
 IF: 'if';
 ELSE: 'else';
 WHILE: 'while';
 
 
+COLOR: 'blanco' | 'azul' | 'marron' | 'cian' | 'gris' | 'amarillo' | 'negro' | 'rojo' | 'verde';
 
 PLUS: '+';
 MINUS: '-';
@@ -235,6 +314,9 @@ BRACKET_CLOSE: '}';
 
 PAR_OPEN: '(';
 PAR_CLOSE: ')';
+
+CUAD_OPEN: '[';
+CUAD_CLOSE: ']';
 
 SEMICOLON: ';';
 

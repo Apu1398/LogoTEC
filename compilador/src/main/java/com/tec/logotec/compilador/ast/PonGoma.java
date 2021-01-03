@@ -11,8 +11,9 @@ public class PonGoma implements ASTNode {
 	
 	
 
-	public PonGoma() {
+	public PonGoma(Turtle theTurtle) {
 		super();
+		this.theTurtle = theTurtle;
 	}
 
 

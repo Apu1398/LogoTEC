@@ -1,4 +1,7 @@
 define miprograma(){
-avanza 60 + 6;
+ponxy 60 60;
+
+centro;
+
 
 }
