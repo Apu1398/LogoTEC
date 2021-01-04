@@ -11,24 +11,29 @@ Inic num = 5+8/4-2*3+(6-2)
 println "Resultado de la operacion: "
 println num
 
+/*
 repite (5)
 [
 	println "Dentro del repite"
 ]
+*/
 
-while(num > 0)
+/*
+Mientras(num > 0)
 [
 	println "Dentro del while"
 	Inic num = num - 1
 ]
-
+*/
+/*
 HazMientras
 [
 	println "Dentro del DoWhile" 
 	Inic num = num - 1
 ](num > 0)
+*/
 
-
+/*
 SiSino(2>1)
 [
 	println "Dentro del SiSino.Condicion Verdadera."
@@ -41,9 +46,12 @@ Si(3>1)
 [
 	println "Dentro del IF"
 ]
+*/
 
-PARA funcion1(numero1)
+
+PARA funcion1[numero1 numero2]
 [
+
 	SiSino(numero1>0)
 	[
 		println "Numero1 es positivo:"
@@ -52,15 +60,39 @@ PARA funcion1(numero1)
 		println "Numero1 es negativo:"
 	]
 	println numero1
+	println numero2
 ]
 FIN
 
 
-println "--------Llamada a la funcion con num positivo-------------"
-funcion1(5)
-println "--------Llamada a la funcion con num positivo-----------"
+
+println "----Llamada a la funcion con num positivo----"
+funcion1[5 7]
+println "----Llamada a la funcion con num positivo----"
 
 
-println "--------Llamada a la funcion con num negativo-------------"
-funcion1(-8)
-println "--------Llamada a la funcion con num negativo-----------"
+println "----Llamada a la funcion con num negativo----"
+funcion1[-8+5 6]
+println "----Llamada a la funcion con num negativo----"
+
+
+
+/*
+println ">>>>>>>>>>>>>>>>Recursion<<<<<<<<<<<<<<<<<<<<<"
+
+PARA f(num)
+[
+	Si(num>0)
+	[
+		println num
+		f(num - 1)
+	]
+]
+FIN 
+
+f(5)
+
+println ">>>>>>>>>>>>>>>>Recursion<<<<<<<<<<<<<<<<<<<<<"
+*/
+
+

@@ -46,7 +46,7 @@ function returns [ASTNode node]:
 		List<ASTNode> body = new ArrayList<ASTNode>();
 		List<String> parameters = new ArrayList<String>();
 	}
-	DEFINE funcName=ID PAR_OPEN (par1=ID{parameters.add($par1.text);} (COMMA par2=ID{parameters.add($par2.text);})*)? PAR_CLOSE 
+	DEFINE funcName=ID OPEN_SQUARE_BRACKET (par1=ID{parameters.add($par1.text);} (par2=ID{parameters.add($par2.text);})*)? CLOSE_SQUARE_BRACKET 
 	OPEN_SQUARE_BRACKET 
 	( statement { body.add($statement.node); } )*
 	CLOSE_SQUARE_BRACKET
@@ -63,7 +63,7 @@ function_call returns [ASTNode node]
 		List<ASTNode> parameters = new ArrayList<ASTNode>();
 	}
 
-	 ID PAR_OPEN (t1=expression{parameters.add($t1.node);} (COMMA t2=expression{parameters.add($t2.node);})*)? PAR_CLOSE 
+	 ID OPEN_SQUARE_BRACKET (t1=expression{parameters.add($t1.node);} (t2=expression{parameters.add($t2.node);})*)? CLOSE_SQUARE_BRACKET 
 	{$node = new FunctionCall($ID.text,parameters); }
 ;
 
@@ -128,7 +128,7 @@ if_cond returns [ASTNode node]:
 
 	
 loop returns [ASTNode node]:
-	WHILE PAR_OPEN logic PAR_CLOSE 
+	(WHILE | WHILE2) PAR_OPEN logic PAR_CLOSE 
 	{
 		List<ASTNode> body = new ArrayList<ASTNode>();
 	}
@@ -158,7 +158,7 @@ doWhile returns [ASTNode node]:
 	{
 		List<ASTNode> body = new ArrayList<ASTNode>();
 	}
-	DOWHILE
+	(DOWHILE | DOWHILE2) 
 	OPEN_SQUARE_BRACKET 
 	( statement { body.add($statement.node); } )*   
 	CLOSE_SQUARE_BRACKET
@@ -256,9 +256,12 @@ PRINTLN: 'println';
 IFELSE: 'SiSino';
 IF: 'Si';
 //ELSE: 'else';
-WHILE: 'while';
+WHILE: 'Mientras';
+WHILE2: 'Hasta';
 REPITE: 'repite';
 DOWHILE: 'HazMientras';
+DOWHILE2: 'HazHasta';
+
 
 DO: 'Haz';
 INIC: 'Inic';
