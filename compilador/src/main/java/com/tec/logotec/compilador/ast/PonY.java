@@ -1,5 +1,4 @@
 package com.tec.logotec.compilador.ast;
-import java.util.Map;
 import com.tec.logotec.compilador.window.CompilerState;
 
 import com.tec.logotec.compilador.turtle.Turtle;
@@ -20,7 +19,7 @@ public class PonY implements ASTNode {
 
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
+	public Object execute(Context symbolTable) {
 		int y = (int)dataY.execute(symbolTable);
 		
 		if (CompilerState.getCompilerStatus() && CompilerState.canIDoSomething()) {

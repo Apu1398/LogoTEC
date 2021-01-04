@@ -2,30 +2,29 @@ package com.tec.logotec.compilador.ast;
 
 import java.util.List;
 
-public class Loop implements ASTNode {
+public class Repite implements ASTNode {
 
-	private ASTNode condition;
+
+	private int numberCondition;
 	private List<ASTNode> body;
 	
 	
-	public Loop(ASTNode condition, List<ASTNode> body) {
+	public Repite(int numberCondition , List<ASTNode> body) {
 		super();
-		this.condition = condition;
+		this.numberCondition = numberCondition;
 		this.body = body;
 	}
 
 
-	
-	
 	@Override
 	public Object execute(Context symbolTable) {
-		while((boolean)condition.execute(symbolTable)) {
+		while( 0 < numberCondition) {
 			for (ASTNode statement : body) {
 				statement.execute(symbolTable);
 			}
+			numberCondition--;
 		}
 		return null;
 	}
-	
 
 }

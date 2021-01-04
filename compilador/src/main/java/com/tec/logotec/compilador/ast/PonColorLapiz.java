@@ -1,6 +1,5 @@
 package com.tec.logotec.compilador.ast;
 import java.awt.Color;
-import java.util.Map;
 import com.tec.logotec.compilador.window.CompilerState;
 
 import com.tec.logotec.compilador.turtle.Turtle;
@@ -21,7 +20,7 @@ public class PonColorLapiz implements ASTNode {
 
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
+	public Object execute(Context symbolTable) {
 		if (CompilerState.getCompilerStatus() && CompilerState.canIDoSomething()) {
 			Color color = null;
 			System.out.println(data);

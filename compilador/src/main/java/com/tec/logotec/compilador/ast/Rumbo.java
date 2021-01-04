@@ -1,7 +1,5 @@
 package com.tec.logotec.compilador.ast;
 
-import java.util.Map;
-
 import com.tec.logotec.compilador.turtle.Turtle;
 
 public class Rumbo implements ASTNode {
@@ -16,8 +14,9 @@ public class Rumbo implements ASTNode {
 
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
-		return Math.round(theTurtle.getHeading());
+	public Object execute(Context symbolTable) {
+		System.out.println(Math.round(theTurtle.getHeading()));
+		return (int) Math.round(theTurtle.getHeading());
 	}
 
 }

@@ -152,6 +152,7 @@ public class VentanaPrincipal {
 		LogoTecLexer lexer = new LogoTecLexer(new ANTLRFileStream(program));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		LogoTecParser parser = new LogoTecParser(tokens,consoleOutputComponent, theTurtle, theWorld);
+		//LogoTecParser parser = new LogoTecParser(tokens);
 		parser.removeErrorListeners();
 		
 	    ANTLRErrorListener errorListener = new ErrorListener(consoleOutputComponent);

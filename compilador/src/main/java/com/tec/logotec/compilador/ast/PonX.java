@@ -20,7 +20,7 @@ public class PonX implements ASTNode {
 
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
+	public Object execute(Context symbolTable) {
 		int x = (int)dataX.execute(symbolTable);
 		
 		if (CompilerState.getCompilerStatus() && CompilerState.canIDoSomething()) {

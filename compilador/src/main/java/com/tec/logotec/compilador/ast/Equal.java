@@ -1,7 +1,5 @@
 package com.tec.logotec.compilador.ast;
 
-import java.util.Map;
-
 public class Equal implements ASTNode {
 
 	private ASTNode operand1;
@@ -15,7 +13,7 @@ public class Equal implements ASTNode {
 	}
 	
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
+	public Object execute(Context symbolTable) {
 		
 		return ((Object)operand1.execute(symbolTable).equals((Object)operand2.execute(symbolTable)));
 	}

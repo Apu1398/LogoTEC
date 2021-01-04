@@ -1,7 +1,5 @@
 package com.tec.logotec.compilador.ast;
 
-import java.util.Map;
-
 public class Greater implements ASTNode {
 
 	private ASTNode operand1;
@@ -16,7 +14,7 @@ public class Greater implements ASTNode {
 
 	
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
+	public Object execute(Context symbolTable) {
 		// TODO Auto-generated method stub
 		return (int)operand1.execute(symbolTable)>(int)operand2.execute(symbolTable);
 	}

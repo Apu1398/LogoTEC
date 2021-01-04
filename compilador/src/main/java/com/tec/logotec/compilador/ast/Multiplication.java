@@ -1,7 +1,5 @@
 package com.tec.logotec.compilador.ast;
 
-import java.util.Map;
-
 public class Multiplication implements ASTNode {
 	private ASTNode operand1;
 	private ASTNode operand2;
@@ -16,8 +14,15 @@ public class Multiplication implements ASTNode {
 
 
 	@Override
-	public Object execute(Map<String, Object> symbolTable) {
-		return (int)operand1.execute(symbolTable) * (int)operand2.execute(symbolTable);
+	public Object execute(Context symbolTable) {
+		
+		try {
+			return (int)operand1.execute(symbolTable) * (int)operand2.execute(symbolTable);
+		}
+		catch(Exception e) {
+			System.out.println("Error, diferentes tipos");
+			return null;
+		}
 	}
 
 }

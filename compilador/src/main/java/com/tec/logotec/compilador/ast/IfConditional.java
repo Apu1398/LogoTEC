@@ -2,31 +2,22 @@ package com.tec.logotec.compilador.ast;
 
 import java.util.List;
 
-public class Conditional implements ASTNode {
+public class IfConditional implements ASTNode {
 
 	private ASTNode condition;
 	private List<ASTNode> ifBody;
-	private List<ASTNode> elseBody;
 	
 	
-	
-	public Conditional(ASTNode condition, List<ASTNode> ifBody, List<ASTNode> elseBody) {
+	public IfConditional(ASTNode condition, List<ASTNode> ifBody) {
 		super();
 		this.condition = condition;
 		this.ifBody = ifBody;
-		this.elseBody = elseBody;
 	}
-
-
 
 	@Override
 	public Object execute(Context symbolTable) {
 		if((boolean)condition.execute(symbolTable)) {
 			for (ASTNode statement : ifBody) {
-				statement.execute(symbolTable);
-			}
-		}else {
-			for (ASTNode statement : elseBody) {
 				statement.execute(symbolTable);
 			}
 		}
