@@ -177,37 +177,37 @@ println returns [ASTNode node]:
 
 logic returns [ASTNode node]:
 		 f1=comparison {$node = $f1.node;}
-		 (
-		 AND f2=comparison {$node = new And($f1.node,$f2.node);}
 		 |
-		 OR f2=comparison {$node = new Or($f1.node,$f2.node);}
-		 )*
+		 (
+		 AND f1=comparison {$node = $f1.node;} f2=comparison {$node = new And($f1.node,$f2.node);}
+		 |
+		 OR f1=comparison {$node = $f1.node;} f2=comparison {$node = new Or($f1.node,$f2.node);}
+		 )+
 ;
 	  		 	
 comparison returns [ASTNode node]:
 		 C1=expression {$node = $C1.node;}
-		 (
-		 (
-		  GT  C2=expression {$node = new Greater($C1.node,$C2.node);     }
-		 |LT  C2=expression {$node = new Lower($C1.node,$C2.node);       }
-		 |GEQ C2=expression {$node = new GreaterEqual($C1.node,$C2.node);}
-		 |LEQ C2=expression {$node = new LowerEqual($C1.node,$C2.node);  }
-		 |EQ  C2=expression {$node = new Equal($C1.node,$C2.node);       }
-		 |DIF C2=expression {$node = new Different($C1.node,$C2.node);   }
-		 )
-		 |NOT C2=expression {$node = new Not($C2.node);                  }
-		 )*	 
+		 |
+		 ( 
+		  PAR_OPEN GT  C1=expression {$node = $C1.node;} C2=expression {$node = new Greater($C1.node,$C2.node);} 	  PAR_CLOSE
+		 |PAR_OPEN LT  C1=expression {$node = $C1.node;} C2=expression {$node = new Lower($C1.node,$C2.node);       } PAR_CLOSE
+		 |PAR_OPEN GEQ C1=expression {$node = $C1.node;} C2=expression {$node = new GreaterEqual($C1.node,$C2.node);} PAR_CLOSE
+		 |PAR_OPEN LEQ C1=expression {$node = $C1.node;} C2=expression {$node = new LowerEqual($C1.node,$C2.node);  } PAR_CLOSE
+		 |PAR_OPEN EQ  C1=expression {$node = $C1.node;} C2=expression {$node = new Equal($C1.node,$C2.node);       } PAR_CLOSE
+		 |PAR_OPEN DIF C1=expression {$node = $C1.node;} C2=expression {$node = new Different($C1.node,$C2.node);   } PAR_CLOSE
+		 )?	 
 ;	
-	
+
+/*
 expression returns [ASTNode node]:
-	t1=factor {$node = $t1.node;} 
+	t1=factor {$node = $t1.node;}
 	(
 	(PLUS t2=factor {$node = new Addition($node, $t2.node);})
 	| 
 	(MINUS t2=factor {$node = new Subtraction($node, $t2.node);})
 	)*   
 ;
-
+ 
 factor returns [ASTNode node]: 
 	t1=term {$node = $t1.node;} 
 	(
@@ -216,7 +216,31 @@ factor returns [ASTNode node]:
 	(DIV t2=term  {$node = new Division($node, $t2.node);})
 	)*
 ;
-	
+ */
+
+ 
+ 
+expression returns [ASTNode node]:
+	(t1=factor {$node = $t1.node;})
+	|
+	(
+	(t1=factor {$node = $t1.node;})? SUMAR  t2=factor {$node = $t2.node;} (t3=expression {$node = new Addition($node, $t3.node);})+ 
+	| 
+	(t1=factor {$node = $t1.node;})? RESTAR  t2=factor {$node = $t2.node;} (t3=expression {$node = new Subtraction($node, $t3.node);})+ 
+	)+
+;
+
+
+factor returns [ASTNode node]: 
+	t1=term {$node = $t1.node;}
+	| 
+	(
+	MULTI t2=term {$node = $t2.node;} (t3=expression {$node = new Multiplication($node, $t3.node);})+ 
+	|
+	DIVIDIR t2=term {$node = $t2.node;}  (t3=expression {$node = new Division($node, $t3.node);})+ 
+	)+
+;
+
 
 term returns [ASTNode node]:
 	ID 
@@ -267,22 +291,28 @@ DO: 'Haz';
 INIC: 'Inic';
 
 
-
+SUMAR: 'Sumar';
 PLUS: '+';
+
+RESTAR: 'Restar';
 MINUS: '-';
+
+MULTI: 'Multi';
 MULT: '*';
+
+DIVIDIR: 'Dividir';
 DIV: '/';
 
-AND: '&&';
-OR: '||';
+AND: 'Y';
+OR: 'O';
 NOT: '!';
 
-GT: '>';
-LT: '<';
-GEQ: '>=';
-LEQ: '<=';
-EQ: '==';
-DIF: '!=';
+GT: 'MayorQue?';
+LT: 'MenorQue?';
+GEQ: 'MayorIgualQue?';
+LEQ: 'MenorIgualQue?';
+EQ: 'Iguales?';
+DIF: 'Diferentes?';
 
 ASSIGN: '=';
 COMMA: ',';
@@ -296,7 +326,10 @@ PAR_CLOSE: ')';
 
 OPEN_SQUARE_BRACKET: '[';
 CLOSE_SQUARE_BRACKET: ']';
-
+ 
+ 
+ 
+ 
 SEMICOLON: ';';
 
 BOOLEAN: 'true' | 'false';
