@@ -11,6 +11,7 @@ grammar LogoTec;
 	import com.tec.logotec.compilador.ast.*;
 	import com.tec.logotec.compilador.turtle.*;
 	import java.awt.TextArea;
+	import javax.swing.JFrame;
 }
 
 @parser::members {
@@ -18,11 +19,14 @@ grammar LogoTec;
 	TextArea consoleOutput;
 	Turtle theTurtle;
 	World theWorld;
+	JFrame ventana;
+	
 	
 	public LogoTecParser(TokenStream input, TextArea consoleOutput, Turtle turtle, World world){
 		this(input);
 		this.consoleOutput = consoleOutput;
 		this.theTurtle = turtle;
+		this.ventana = ventana;
 		this.theWorld = world;
 		this.theTurtle.goTo(0, 0);
 		this.theWorld.eraseGround();
@@ -50,36 +54,34 @@ program:
 ;
 
 
-statement returns [ASTNode node]: 
-	  function			{$node = $function.node;	   }
+statement returns [ASTNode node]: 	 
+	function			{$node = $function.node;	   }
 	| function_call		{$node = $function_call.node;  }
-	//| var_declaration	{$node = $var_declaration.node;}
 	| var_assignment	{$node = $var_assignment.node; }
 	| comment  			{$node = $comment.node;	       }
 	| var_init			{$node = $var_init.node; 	   }
-	| if_ifelse 		{$node = $if_ifelse.node;      }
+	| println 	  		{$node = $println.node;        }
+	| flowFunctions     {$node = $flowFunctions.node;  }
+	| turtleFunctions   {$node = $turtleFunctions.node;}
+	| operaciones       {$node = $operaciones.node;    }
+;
+
+
+
+
+
+flowFunctions returns [ASTNode node]: 	
+	  if_ifelse 		{$node = $if_ifelse.node;      }
 	| if_cond			{$node = $if_cond.node;		   }
 	| loop 		  		{$node = $loop.node;           }
 	| repite 		  	{$node = $repite.node;         }
 	| doWhile			{$node = $doWhile.node;        }
-	| println 	  		{$node = $println.node;        }
-	| avanza            {$node = $avanza.node;		   }
-	| retrocede         {$node = $retrocede.node;      }
-	| giraderecha       {$node = $giraderecha.node;    }
-	| giraizquierda     {$node = $giraizquierda.node;  }
-	| ponpos		    {$node = $ponpos.node;         }
-	| ponrumbo		    {$node = $ponrumbo.node;       }
-	| pongoma   		{$node = $pongoma.node;        }
-	| quitagoma	   		{$node = $quitagoma.node;      }
-	| bajalapiz   		{$node = $bajalapiz.node;      }
-	| subelapiz   		{$node = $subelapiz.node;      }
-	| poncolorlapiz     {$node = $poncolorlapiz.node;  }
-	| centro            {$node = $centro.node;         }
-	| espera            {$node = $espera.node;         }
 ;
+	
+
 
 function returns [ASTNode node]:
-	{
+	{ 
 		List<ASTNode> body = new ArrayList<ASTNode>();
 		List<String> parameters = new ArrayList<String>();
 	}
@@ -91,7 +93,7 @@ function returns [ASTNode node]:
 	{
 		$node = new Function($funcName.text, parameters, body); 
 	}
-;
+;  
 
 
 function_call returns [ASTNode node]
@@ -100,7 +102,7 @@ function_call returns [ASTNode node]
 		List<ASTNode> parameters = new ArrayList<ASTNode>();
 	}
 
-	 ID PAR_OPEN (t1=expression{parameters.add($t1.node);} (COMMA t2=expression{parameters.add($t2.node);})*)? PAR_CLOSE 
+	 ID PAR_OPEN (t1=operaciones{parameters.add($t1.node);} (COMMA t2=operaciones{parameters.add($t2.node);})*)? PAR_CLOSE 
 	{$node = new FunctionCall($ID.text,parameters); }
 ;
 
@@ -124,17 +126,17 @@ var_declaration returns [ASTNode node]:
 
 		
 var_init returns [ASTNode node]: 
-	DO ID expression 
+	DO ID operaciones 
 	{
-		$node = new VarInitialization($ID.text, $expression.node);
+		$node = new VarInitialization($ID.text, $operaciones.node);
 	}
 ;
 
 	
 var_assignment returns [ASTNode node]: 
-	INIC ID ASSIGN expression 
+	INIC ID ASSIGN operaciones 
 	{
-		$node = new VarAssignment($ID.text, $expression.node);
+		$node = new VarAssignment($ID.text, $operaciones.node);
 	}
 ;
 
@@ -191,7 +193,7 @@ repite returns [ASTNode node]:
 	REPITE PAR_OPEN NUMBER PAR_CLOSE 
 	{
 		List<ASTNode> body = new ArrayList<ASTNode>();
-	}
+	} 
 	OPEN_SQUARE_BRACKET 
 	( statement { body.add($statement.node); } )*   
 	CLOSE_SQUARE_BRACKET
@@ -200,7 +202,7 @@ repite returns [ASTNode node]:
 	}
 ;	
 
-doWhile returns [ASTNode node]:
+doWhile returns [ASTNode node]: 
 	{
 		List<ASTNode> body = new ArrayList<ASTNode>();
 	}
@@ -216,37 +218,54 @@ doWhile returns [ASTNode node]:
 
 
 println returns [ASTNode node]: 
-	PRINTLN expression 
+	PRINTLN operaciones 
 	{
-		$node  = new Println($expression.node);
+		$node  = new Println($operaciones.node);
 	};
 	
 
-avanza returns [ASTNode node]: AVANZA expression {
-			$node = new Avanza($expression.node, theTurtle);
+turtleFunctions returns [ASTNode node]:
+     avanza            {$node = $avanza.node;		   }
+	| retrocede         {$node = $retrocede.node;      }
+	| giraderecha       {$node = $giraderecha.node;    }
+	| giraizquierda     {$node = $giraizquierda.node;  }
+	| ponpos		    {$node = $ponpos.node;         }
+	| ponrumbo		    {$node = $ponrumbo.node;       }
+	| pongoma   		{$node = $pongoma.node;        }
+	| quitagoma	   		{$node = $quitagoma.node;      }
+	| bajalapiz   		{$node = $bajalapiz.node;      }
+	| subelapiz   		{$node = $subelapiz.node;      }
+	| poncolorlapiz     {$node = $poncolorlapiz.node;  }
+	| centro            {$node = $centro.node;         }
+	| espera            {$node = $espera.node;         }
+;
+		
+avanza returns [ASTNode node]: AVANZA operaciones {
+			$node = new Avanza($operaciones.node, theTurtle);
+			
 };
 
-retrocede returns [ASTNode node]: RETROCEDE expression {
-			$node = new Retrocede($expression.node, theTurtle);
+retrocede returns [ASTNode node]: RETROCEDE operaciones {
+			$node = new Retrocede($operaciones.node, theTurtle);
 };
 
-giraderecha returns [ASTNode node]: GIRADERECHA expression {
-			$node = new GiraDerecha($expression.node, theTurtle);
+giraderecha returns [ASTNode node]: GIRADERECHA operaciones {
+			$node = new GiraDerecha($operaciones.node, theTurtle);
 };
 
-giraizquierda returns [ASTNode node]: GIRAIZQUIERDA expression {
-			$node = new GiraIzquierda($expression.node, theTurtle);
+giraizquierda returns [ASTNode node]: GIRAIZQUIERDA operaciones {
+			$node = new GiraIzquierda($operaciones.node, theTurtle);
 };
 
 ponpos returns [ASTNode node]: 
-			(PONPOS OPEN_SQUARE_BRACKET t1 = expression t2=expression CLOSE_SQUARE_BRACKET
+			(PONPOS OPEN_SQUARE_BRACKET t1 = operaciones t2=operaciones CLOSE_SQUARE_BRACKET
 		    |
-		    PONPOS t1=expression t2=expression) {
+		    PONPOS t1=operaciones t2=operaciones) {
 		    	$node = new PonPos($t1.node, $t2.node, theTurtle);
 		    };
 		    
-ponrumbo returns [ASTNode node]: PONRUMBO expression {
-			$node = new PonRumbo($expression.node, theTurtle);
+ponrumbo returns [ASTNode node]: PONRUMBO operaciones {
+			$node = new PonRumbo($operaciones.node, theTurtle);
 };
 
 /*
@@ -255,12 +274,12 @@ rumbo returns [ASTNode node]: RUMBO {
 };*/
 
 
-ponx returns [ASTNode node]: PONX expression {
-			$node = new PonX($expression.node, theTurtle);
+ponx returns [ASTNode node]: PONX operaciones {
+			$node = new PonX($operaciones.node, theTurtle);
 };
 
-pony returns [ASTNode node]: PONY expression {
-			$node = new PonY($expression.node, theTurtle);
+pony returns [ASTNode node]: PONY operaciones {
+			$node = new PonY($operaciones.node, theTurtle);
 };
 
 pongoma returns [ASTNode node]: PONGOMA {
@@ -287,9 +306,136 @@ centro returns [ASTNode node]: CENTRO {
 	        $node = new Centro(theTurtle);
 };	  
 
-espera returns [ASTNode node]: ESPERA expression {
-			$node = new Espera($expression.node, theTurtle);
-};  
+espera returns [ASTNode node]: ESPERA operaciones {
+			$node = new Espera($operaciones.node, theTurtle);
+}; 
+
+
+operaciones returns [ASTNode node]:
+		math
+		{
+			$node = $math.node;
+		}
+		|logic_Master
+		{
+			$node = $logic_Master.node;
+		};
+
+
+math returns [ASTNode node]:
+		suma
+		{
+			$node = $suma.node;
+		}	
+		|
+		diferencia
+		{
+			$node = $diferencia.node;
+		}
+		|
+		producto
+		{
+			$node = $producto.node;
+		}		
+		|
+		division
+		{
+			$node = $division.node;
+		}
+		|expression
+		{
+			$node = $expression.node;
+		}
+		;
+
+suma returns [ASTNode node]: 
+		{
+			List<ASTNode> parameters = new ArrayList<ASTNode>();
+		}
+		SUMA
+		PAR_OPEN 
+		(t1=math {parameters.add($t1.node);})
+		(t2=math {parameters.add($t2.node);})+
+		PAR_CLOSE
+		{
+			$node = new Suma(parameters);
+		}
+;
+
+producto returns [ASTNode node]: 
+		{
+			List<ASTNode> parameters = new ArrayList<ASTNode>();
+		}
+		PRODUCTO
+		PAR_OPEN 
+		(t1= math  {parameters.add($t1.node);})
+		(t2= math  {parameters.add($t2.node);})+
+		PAR_CLOSE
+		{
+			$node = new Producto(parameters);
+		}
+;
+
+diferencia returns [ASTNode node]: 
+		{
+			List<ASTNode> parameters = new ArrayList<ASTNode>();
+		}
+		DIFERENCIA
+		PAR_OPEN 
+		(t1=math {parameters.add($t1.node);})
+		(t2= math {parameters.add($t2.node);})+
+		PAR_CLOSE
+		{
+			$node = new Diferencia(parameters);
+		}
+;
+division returns [ASTNode node]: 
+		{ 
+			List<ASTNode> parameters = new ArrayList<ASTNode>();
+		}
+		DIVISION
+		PAR_OPEN 
+		(t1=math {parameters.add($t1.node);})
+		(t2= math {parameters.add($t2.node);})+
+		PAR_CLOSE
+		{
+			$node = new Cociente(parameters);
+		}
+;
+
+logic_Master returns [ASTNode node]:
+		y_logico  {$node = $y_logico.node;}
+		|o_logico {$node = $o_logico.node;}
+		|mayorque {$node = $mayorque.node;}
+		|menorque {$node = $menorque.node;}
+		|iguales  {$node = $iguales.node; }
+		|logic    {$node = $logic.node;   }
+;
+
+y_logico returns [ASTNode node]:
+		Y_LOGICO PAR_OPEN l1 = logic_Master l2=logic_Master PAR_CLOSE{
+			$node = new And($l1.node, $l2.node);
+		};
+
+o_logico returns [ASTNode node]:
+		O_LOGICO PAR_OPEN l1 = logic_Master l2=logic_Master PAR_CLOSE{
+			$node = new Or($l1.node, $l2.node);
+		};
+		
+mayorque returns [ASTNode node]:
+		MAYORQUE PAR_OPEN l1 = logic_Master l2=logic_Master PAR_CLOSE{
+			$node = new Greater($l1.node, $l2.node);
+		};
+		
+menorque returns [ASTNode node]:
+		MENORQUE PAR_OPEN l1 = logic_Master l2=logic_Master PAR_CLOSE{
+			$node = new Lower($l1.node, $l2.node);
+		};
+		 
+iguales returns [ASTNode node]:
+		IGUALES PAR_OPEN l1 = logic_Master l2=logic_Master PAR_CLOSE{
+			$node = new Equal($l1.node, $l2.node);
+		};
 
 logic returns [ASTNode node]:
 		 f1=comparison {$node = $f1.node;}
@@ -299,19 +445,18 @@ logic returns [ASTNode node]:
 		 OR f2=comparison {$node = new Or($f1.node,$f2.node);}
 		 )*
 ;
+
+
 	  		 	
 comparison returns [ASTNode node]:
-		 C1=expression {$node = $C1.node;}
+		 C1=math {$node = $C1.node;}
 		 (
-		 (
-		  GT  C2=expression {$node = new Greater($C1.node,$C2.node);     }
-		 |LT  C2=expression {$node = new Lower($C1.node,$C2.node);       }
-		 |GEQ C2=expression {$node = new GreaterEqual($C1.node,$C2.node);}
-		 |LEQ C2=expression {$node = new LowerEqual($C1.node,$C2.node);  }
-		 |EQ  C2=expression {$node = new Equal($C1.node,$C2.node);       }
-		 |DIF C2=expression {$node = new Different($C1.node,$C2.node);   }
-		 )
-		 |NOT C2=expression {$node = new Not($C2.node);                  }
+		  GT  C2=math {$node = new Greater($C1.node,$C2.node);     }
+		 |LT  C2=math {$node = new Lower($C1.node,$C2.node);       }
+		 |GEQ C2=math {$node = new GreaterEqual($C1.node,$C2.node);}
+		 |LEQ C2=math {$node = new LowerEqual($C1.node,$C2.node);  }
+		 |EQ  C2=math {$node = new Equal($C1.node,$C2.node);       }
+		 |DIF C2=math {$node = new Different($C1.node,$C2.node);   }		 
 		 )*	 
 ;	
 	
@@ -361,7 +506,7 @@ term returns [ASTNode node]:
 		$node = new Constant(Boolean.parseBoolean($BOOLEAN.text));
 	}
 	| PAR_OPEN 
-	  expression { $node = $expression.node; }
+	  math { $node = $math.node; }
 	  PAR_CLOSE
 ;
 
@@ -405,6 +550,13 @@ DO: 'Haz';
 INIC: 'Inic';
 
 
+SUMA: 'suma';
+DIFERENCIA: 'diferencia';
+PRODUCTO: 'producto';
+DIVISION: 'division';
+
+
+
 PLUS: '+';
 MINUS: '-';
 MULT: '*';
@@ -413,6 +565,13 @@ DIV: '/';
 AND: '&&';
 OR: '||';
 NOT: '!';
+
+Y_LOGICO: 'Y';
+O_LOGICO: 'O';
+MAYORQUE: 'mayorque?';
+MENORQUE: 'menorque?';
+IGUALES: 'iguales?';
+
 
 GT: '>';
 LT: '<';

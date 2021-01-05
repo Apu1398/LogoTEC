@@ -1,4 +1,9 @@
-//HOLA
-av 90 * true
-//HOLA MUNCO
-gd 90
+//hola
+
+PARA nombre (num1)
+[
+ av num1
+]
+FIN
+
+nombre (60)
