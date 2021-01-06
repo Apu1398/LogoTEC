@@ -362,6 +362,26 @@ mathFunction returns [ASTNode node]:
 		{
 			$node = $division.node;
 		}
+		|
+		potencia
+		{
+			$node = $potencia.node;
+		}
+		|
+		azar
+		{
+			$node = $azar.node;
+		}
+		|
+		redondea
+		{
+			$node = $redondea.node;
+		}
+		|
+		menos
+		{
+			$node = $menos.node;
+		}
 		;
 
 suma returns [ASTNode node]: 
@@ -421,6 +441,50 @@ division returns [ASTNode node]:
 ; 
  
  
+potencia returns [ASTNode node]: 
+		POTENCIA
+		PAR_OPEN 
+		(t1= math )
+		(t2= math )
+		PAR_CLOSE
+		{
+			$node = new Potencia($t1.node, $t2.node);
+		}
+;  
+ 
+
+azar returns [ASTNode node]: 
+		AZAR
+		PAR_OPEN 
+		t1= math
+		PAR_CLOSE
+		{
+			$node = new Azar($t1.node);
+		}
+;  
+
+
+redondea returns [ASTNode node]:
+		REDONDEA
+		PAR_OPEN 
+		t1= math
+		PAR_CLOSE
+		{
+			$node = new Redondea($t1.node);
+		}
+;
+ 
+menos returns [ASTNode node]:
+		MENOS
+		PAR_OPEN 
+		t1= math
+		PAR_CLOSE
+		{
+			$node = new Menos($t1.node);
+		}
+;
+ 
+ 
 math returns [ASTNode node]:
 	t1=mathFactor {$node = $t1.node;} 
 	(
@@ -440,7 +504,9 @@ mathFactor returns [ASTNode node]:
 ;
 
 
+/*---------------------------------------ARITMETIC EXPRESSIONS--------------------------------------- */
 
+/*------------------------------------------NUMBER VALUES------------------------------------------ */
 numberTerm returns [ASTNode node]:
 	ID 
 	{
@@ -462,8 +528,10 @@ numberTerm returns [ASTNode node]:
 		$node = $mathFunction.node;
 	}
 ;
+/*------------------------------------------NUMBER VALUES------------------------------------------ */
 
-/*---------------------------------------ARITMETIC EXPRESSIONS--------------------------------------- */
+/*------------------------------------------BOOLEAN VALUES------------------------------------------ */
+
 
 booleanTerm returns [ASTNode node]:
 	ID 
@@ -476,6 +544,11 @@ booleanTerm returns [ASTNode node]:
 	}
 ;
 
+/*------------------------------------------BOOLEAN VALUES------------------------------------------ */
+
+
+
+/*------------------------------------------STRING VALUES------------------------------------------ */
 stringTerm returns [ASTNode node]:
 	ID 
 	{
@@ -489,6 +562,8 @@ stringTerm returns [ASTNode node]:
 ;
 
 
+/*------------------------------------------STRING VALUES------------------------------------------ */
+
 println returns [ASTNode node]: 
 	PRINTLN type 
 	{
@@ -501,7 +576,6 @@ comment returns [ASTNode node]:
 	LINE_COMMENT){
 		$node = new Comment();
 	};
-
 
 //FUNCTIONS TOKEN
 DEFINE: 'PARA';
@@ -548,20 +622,24 @@ DO: 'Haz';
 INIC: 'Inic';
 //VAR TOKENS
 
-// ARITMETIC TOKENS
+// ----------------------------------------ARITMETIC TOKENS-----------------------------------
 SUMA: 'suma';
 DIFERENCIA: 'diferencia';
 PRODUCTO: 'producto';
 DIVISION: 'division';
+POTENCIA: 'potencia';
+AZAR : 'azar';
+REDONDEA: 'redondea';
+MENOS: 'menos';
 
 PLUS: '+';
 MINUS: '-';
 MULT: '*';
 DIV: '/';
-// ARITMETIC TOKENS
+// ----------------------------------------ARITMETIC TOKENS-----------------------------------
 
 
-//LOGIC TOKENS
+//------------------------------------------LOGIC TOKENS--------------------------------------
 AND: '&&';
 OR: '||';
 
@@ -578,9 +656,9 @@ GEQ: '>=';
 LEQ: '<=';
 EQ: '==';
 DIF: '=!';
-//LOGIC TOKENS
+//------------------------------------------LOGIC TOKENS--------------------------------------
 
-//SIMBOL TOKENS
+//-----------------------------------------SIMBOL TOKENS---------------------------------------
 ASSIGN: '=';
 COMMA: ',';
 SEMICOLON: ';';
@@ -594,16 +672,16 @@ PAR_CLOSE: ')';
 
 OPEN_SQUARE_BRACKET: '[';
 CLOSE_SQUARE_BRACKET: ']';
-//SIMBOL TOKENS 
+//-----------------------------------------SIMBOL TOKENS--------------------------------------- 
  
-//VAR VALUES TOKENS 
+//--------------------------------------VAR VALUES TOKENS--------------------------------------
 BOOLEAN: 'true' | 'false';
 
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
 
 STRING: '"' ~('"')* '"';
 NUMBER: [0-9]+;
-//VAR VALUES TOKENS
+//--------------------------------------VAR VALUES TOKENS--------------------------------------
 
 WS
 :

@@ -1,22 +1,3 @@
 //Linea comentario
 
-Haz num 1 + 3 + 4 * suma(5-2 3)
-println "NUM"
-println num  + suma(diferencia(3 2) 1)
-println "NUM"
-
-PARA func[logica num2 cadena]
-[
-	SiSino(logica)
-	[	
-		println num2
-	]
-	[
-		println cadena
-	]
-
-]
-FIN
-
-
-func[mayorque? (2 8) 8 "La condicion es falsa"]
+println 2 + menos(-4+5*6) 
