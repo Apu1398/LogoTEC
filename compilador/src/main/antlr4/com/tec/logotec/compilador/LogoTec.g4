@@ -37,7 +37,9 @@ statement returns [ASTNode node]:
 	| var_assignment	{$node = $var_assignment.node; }
 	| comment  			{$node = $comment.node;	       }
 	| var_init			{$node = $var_init.node; 	   }
-	| println 	  		{$node = $println.node;        }
+	| var_inc			{$node = $var_inc.node;		   }
+	| var_inc_by_numb   {$node = $var_inc_by_numb.node;}
+	| println 	  		{$node = $println.node;        } 
 	| flowFunctions     {$node = $flowFunctions.node;  }
 	//| turtleFunctions   {$node = $turtleFunctions.node;}
 	| type       		{$node = $type.node;   	   	   }
@@ -79,6 +81,28 @@ var_assignment returns [ASTNode node]:
 	INIC ID ASSIGN type 
 	{
 		$node = new VarAssignment($ID.text, $type.node);
+	}
+;
+
+var_inc returns [ASTNode node]:
+	INC 
+	OPEN_SQUARE_BRACKET 
+	ID math
+	CLOSE_SQUARE_BRACKET
+	{
+		$node = new VarInc($ID.text,$math.node);
+		
+	}
+;
+
+
+var_inc_by_numb returns [ASTNode node]:
+	INC 
+	OPEN_SQUARE_BRACKET 
+	ID 
+	CLOSE_SQUARE_BRACKET
+	{
+		$node = new VarIncByNumb($ID.text);
 	}
 ;
 
@@ -620,6 +644,7 @@ DOWHILE: 'HazMientras' | 'HazHasta';
 //VAR TOKENS
 DO: 'Haz';
 INIC: 'Inic';
+INC: 'Inc';
 //VAR TOKENS
 
 // ----------------------------------------ARITMETIC TOKENS-----------------------------------

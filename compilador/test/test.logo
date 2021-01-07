@@ -1,3 +1,14 @@
 //Linea comentario
 
-println 2 + menos(-4+5*6) 
+Haz num 12
+Haz num2 num-9
+
+
+
+Inc [num]
+
+Inc [num num2]
+
+
+println num
+println num2
