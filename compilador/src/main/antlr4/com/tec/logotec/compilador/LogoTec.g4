@@ -303,12 +303,7 @@ type returns [ASTNode node]:
 /*-----------------------------------------LOGIC EXPRESSIONS----------------------------------------- */
 
 logic_Master returns [ASTNode node]:
-		y_logico  	{$node = $y_logico.node;   }
-		|o_logico 	{$node = $o_logico.node;   }
-		|mayorque 	{$node = $mayorque.node;   }
-		|menorque 	{$node = $menorque.node;   }
-		|iguales  	{$node = $iguales.node;    }
-		|logic    	{$node = $logic.node;      }
+		logic    	{$node = $logic.node;      }
 		|booleanTerm{$node = $booleanTerm.node;}
 ;
 
@@ -323,6 +318,18 @@ o_logico returns [ASTNode node]:
 		{
 			$node = new Or($l1.node, $l2.node);
 		};
+
+logicFunction returns [ASTNode node]:
+		y_logico  	{$node = $y_logico.node;   }
+		|
+		o_logico 	{$node = $o_logico.node;   }
+		|
+		mayorque 	{$node = $mayorque.node;   }
+		|
+		menorque 	{$node = $menorque.node;   }
+		|
+		iguales  	{$node = $iguales.node;    }
+;
 		
 mayorque returns [ASTNode node]:
 		MAYORQUE PAR_OPEN l1 = logic_Master l2=logic_Master PAR_CLOSE
@@ -361,6 +368,7 @@ comparison returns [ASTNode node]:
 		 |EQ  C2=math {$node = new Equal($C1.node,$C2.node);       }
 		 |DIF C2=math {$node = new Different($C1.node,$C2.node);   }
 		 )* 
+		 |booleanTerm {$node = $booleanTerm.node:				   }
 ;	
  
 /*-----------------------------------------LOGIC EXPRESSIONS----------------------------------------- */
@@ -565,6 +573,11 @@ booleanTerm returns [ASTNode node]:
 	|BOOLEAN
 	{
 		$node = new Constant(Boolean.parseBoolean($BOOLEAN.text));
+	}
+	|
+	logicFunction 
+	{
+		$node = $logicFunction.node;
 	}
 ;
 
