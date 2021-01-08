@@ -303,7 +303,9 @@ type returns [ASTNode node]:
 /*-----------------------------------------LOGIC EXPRESSIONS----------------------------------------- */
 
 logic_Master returns [ASTNode node]:
-		logic    	{$node = $logic.node;      }
+		y_logico  	{$node = $y_logico.node;   }
+		|o_logico 	{$node = $o_logico.node;   }
+		|logic    	{$node = $logic.node;      }
 		|booleanTerm{$node = $booleanTerm.node;}
 ;
 
@@ -320,15 +322,11 @@ o_logico returns [ASTNode node]:
 		};
 
 logicFunction returns [ASTNode node]:
-		y_logico  	{$node = $y_logico.node;   }
+		mayorque {$node = $mayorque.node;}
 		|
-		o_logico 	{$node = $o_logico.node;   }
+		menorque {$node = $menorque.node;}
 		|
-		mayorque 	{$node = $mayorque.node;   }
-		|
-		menorque 	{$node = $menorque.node;   }
-		|
-		iguales  	{$node = $iguales.node;    }
+		iguales  {$node = $iguales.node; }
 ;
 		
 mayorque returns [ASTNode node]:
