@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Suma implements ASTNode {
 
-	private List<ASTNode> parameters; 
+private List<ASTNode> parameters; 
 	
 	public Suma( List<ASTNode> parameters) 
 	{
@@ -24,6 +24,5 @@ public class Suma implements ASTNode {
 		
 		return resultado;
 	}
-
 
 }

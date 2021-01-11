@@ -1,9 +1,3 @@
-//hola
+//Esto es un comentario
 
-PARA nombre (num1)
-[
- av num1
-]
-FIN
-
-nombre (60)
+av 60 +1

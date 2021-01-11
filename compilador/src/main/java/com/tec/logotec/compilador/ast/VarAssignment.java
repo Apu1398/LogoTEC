@@ -17,13 +17,7 @@ public class VarAssignment implements ASTNode {
 
 	@Override
 	public Object execute(Context symbolTable) {
-		if(symbolTable.get(name).getClass().equals(expression.execute(symbolTable).getClass())) {
-			symbolTable.put(name, expression.execute(symbolTable));
-		}
-		else {
-			System.out.println("ERROR");
-		}
-		
+		symbolTable.put(name, expression.execute(symbolTable));
 		return null;
 	}
 

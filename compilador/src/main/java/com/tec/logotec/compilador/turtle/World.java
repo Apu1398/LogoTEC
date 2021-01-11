@@ -47,8 +47,8 @@ public class World extends JInternalFrame {
 	}
 	public World(int width, int height, Color backgroundColor) {
 		super("Turtle World");
-		this.centerX = 300;
-		this.centerY = 300;
+		this.centerX = width/2;
+		this.centerY = height/2;
 		
 		this.overlay = new BufferedImage(2*this.centerX, 2*this.centerY, BufferedImage.TYPE_INT_ARGB);
 		this.ground = new BufferedImage(2*this.centerX, 2*this.centerY, BufferedImage.TYPE_INT_ARGB);

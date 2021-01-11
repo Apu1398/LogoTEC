@@ -15,14 +15,7 @@ public class Multiplication implements ASTNode {
 
 	@Override
 	public Object execute(Context symbolTable) {
-		
-		try {
-			return (int)operand1.execute(symbolTable) * (int)operand2.execute(symbolTable);
-		}
-		catch(Exception e) {
-			System.out.println("Error, diferentes tipos");
-			return null;
-		}
+		return (int)operand1.execute(symbolTable) * (int)operand2.execute(symbolTable);
 	}
 
 }

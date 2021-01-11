@@ -24,7 +24,7 @@ public class PonX implements ASTNode {
 		int x = (int)dataX.execute(symbolTable);
 		
 		if (CompilerState.getCompilerStatus() && CompilerState.canIDoSomething()) {
-			theTurtle.goTo(x,theTurtle.getLocation().getY());
+			theTurtle.goTo(x,theTurtle.getLocation().getY()*-1);
 		}		
 		return null;
 	}

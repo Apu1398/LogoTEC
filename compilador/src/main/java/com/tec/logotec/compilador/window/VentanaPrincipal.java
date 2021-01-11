@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 import java.awt.TextArea;
 import javax.swing.JLabel;
+
+import java.awt.Color;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
@@ -50,7 +52,7 @@ public class VentanaPrincipal {
 	private void initialize() {
 		frmLogotec = new JFrame();
 		frmLogotec.setTitle("LogoTec");
-		frmLogotec.setBounds(100, 100, 1179, 673);
+		frmLogotec.setBounds(0, 0, 1350, 730);
 		frmLogotec.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLogotec.getContentPane().setLayout(null);
 		
@@ -64,7 +66,7 @@ public class VentanaPrincipal {
 				}				
 			}
 		});
-		btnCompilar.setBounds(10, 307, 89, 23);
+		btnCompilar.setBounds(10, 442, 89, 23);
 		frmLogotec.getContentPane().add(btnCompilar);
 		
 		JButton btnEjecutar = new JButton("Ejecutar");
@@ -78,38 +80,39 @@ public class VentanaPrincipal {
 			}
 		});
 		
-		btnEjecutar.setBounds(109, 307, 89, 23);
+		btnEjecutar.setBounds(109, 442, 89, 23);
 		frmLogotec.getContentPane().add(btnEjecutar);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(10, 341, 528, 2);
+		separator.setBounds(10, 476, 528, 2);
 		frmLogotec.getContentPane().add(separator);
 		
 		TextArea txtCodigo = new TextArea();
 		txtCodigo.setFont(new Font("Calibri", Font.PLAIN, 13));
-		txtCodigo.setText("define miprograma(){\r\n\r\n\r\n}");
+		txtCodigo.setText("//Esto es un comentario");
 		codeEditingComponent = txtCodigo;
-		txtCodigo.setBounds(10, 10, 516, 291);
+		txtCodigo.setBounds(10, 10, 516, 426);
 		frmLogotec.getContentPane().add(txtCodigo);
 		
 		TextArea txtConsola = new TextArea();
 		consoleOutputComponent = txtConsola;
 		txtConsola.setEditable(false);
-		txtConsola.setBounds(10, 371, 516, 263);
+		txtConsola.setBounds(10, 512, 516, 168);
 		frmLogotec.getContentPane().add(txtConsola);
 		
 		JLabel lblNewLabel = new JLabel("Consola");
-		lblNewLabel.setBounds(10, 354, 46, 14);
+		lblNewLabel.setBounds(10, 492, 46, 14);
 		frmLogotec.getContentPane().add(lblNewLabel);
 		
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setOrientation(SwingConstants.VERTICAL);
-		separator_1.setBounds(539, 0, 10, 634);
+		separator_1.setBounds(539, 11, 10, 669);
 		frmLogotec.getContentPane().add(separator_1);
 		
 		//Se añade el panel de tortuga
 		
-		theWorld = new World();
+		theWorld = new World(774,680, new Color(255,255,255));
+		theWorld.setSize(774, 680);
 	    theWorld.setLocation(550,0);
 		theTurtle = new Turtle(theWorld);
 		frmLogotec.getContentPane().add(theWorld);	 
