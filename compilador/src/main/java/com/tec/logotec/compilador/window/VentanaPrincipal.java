@@ -11,7 +11,6 @@ import com.tec.logotec.compilador.turtle.World;
 import com.tec.logotec.compilador.LogoTecCustomVisitor;
 import com.tec.logotec.compilador.LogoTecLexer;
 import com.tec.logotec.compilador.LogoTecParser;
-import com.tec.logotec.compilador.ast.ASTNode;
 import com.tec.logotec.compilador.turtle.Turtle;
 
 import javax.swing.JButton;
@@ -27,7 +26,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 import java.awt.TextArea;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -137,6 +135,8 @@ public class VentanaPrincipal {
 				FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos LOGO", "logo");
 				selectorArchivos.setFileFilter(filtro);
 				
+				selectorArchivos.setCurrentDirectory(new File("C:\\Users\\jp139\\Desktop\\Codigos Logo"));
+				
 				selectorArchivos.showOpenDialog(frmLogotec);
 				
 				File archivo = selectorArchivos.getSelectedFile();
@@ -150,7 +150,7 @@ public class VentanaPrincipal {
 		        }
 		        b.close();				
 			}catch (Exception a) {
-				consoleOutputComponent.setText("Error abriendo archivo");
+				consoleOutputComponent.setText("No se cargo ningun archivo");
 			}
 				}
 			});
@@ -193,6 +193,7 @@ public class VentanaPrincipal {
 		
 		
 		theTurtle.putPenDown();
+		theTurtle.setShellSize(8);
 
 
 		LogoTecLexer lexer = new LogoTecLexer(new ANTLRFileStream(program));

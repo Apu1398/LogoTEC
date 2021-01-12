@@ -1,7 +1,6 @@
 package com.tec.logotec.compilador.window;
 
 import java.awt.TextArea;
-import com.tec.logotec.compilador.window.CompilerState;
 import java.util.BitSet;
 
 
@@ -26,7 +25,7 @@ public class ErrorListener implements ANTLRErrorListener {
 	public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
 			String msg, RecognitionException e) {
 		CompilerState.errorDetected();
-		consola.setText("Line: " + line + consola.getText() + msg + "\n");		
+		consola.setText("Line: " + line + " " + consola.getText() + msg + "\n");		
 	}
 
 	@Override
