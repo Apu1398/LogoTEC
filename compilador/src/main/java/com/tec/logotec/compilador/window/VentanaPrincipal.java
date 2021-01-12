@@ -11,20 +11,28 @@ import com.tec.logotec.compilador.turtle.World;
 import com.tec.logotec.compilador.LogoTecCustomVisitor;
 import com.tec.logotec.compilador.LogoTecLexer;
 import com.tec.logotec.compilador.LogoTecParser;
+import com.tec.logotec.compilador.ast.ASTNode;
 import com.tec.logotec.compilador.turtle.Turtle;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 import java.awt.TextArea;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class VentanaPrincipal {
 
@@ -116,6 +124,38 @@ public class VentanaPrincipal {
 	    theWorld.setLocation(550,0);
 		theTurtle = new Turtle(theWorld);
 		frmLogotec.getContentPane().add(theWorld);	 
+		
+		JButton btnAbrir = new JButton("Abrir");
+		btnAbrir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+				
+				JFileChooser selectorArchivos = new JFileChooser();
+				selectorArchivos.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				
+				FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos LOGO", "logo");
+				selectorArchivos.setFileFilter(filtro);
+				
+				selectorArchivos.showOpenDialog(frmLogotec);
+				
+				File archivo = selectorArchivos.getSelectedFile();
+								 
+				String cadena;
+		        FileReader f = new FileReader(archivo);
+		        BufferedReader b = new BufferedReader(f);
+		        codeEditingComponent.setText("");
+		        while((cadena = b.readLine())!=null) {
+		            codeEditingComponent.setText(codeEditingComponent.getText() +  cadena + "\n");
+		        }
+		        b.close();				
+			}catch (Exception a) {
+				consoleOutputComponent.setText("Error abriendo archivo");
+			}
+				}
+			});
+		btnAbrir.setBounds(437, 442, 89, 23);
+		frmLogotec.getContentPane().add(btnAbrir);
 		 
 	}
 	
@@ -150,6 +190,9 @@ public class VentanaPrincipal {
 	    myWriter.close();
 		
 		String program =  "input.smp";
+		
+		
+		theTurtle.putPenDown();
 
 
 		LogoTecLexer lexer = new LogoTecLexer(new ANTLRFileStream(program));
@@ -165,6 +208,7 @@ public class VentanaPrincipal {
 		LogoTecCustomVisitor visitor = new LogoTecCustomVisitor();
 		System.out.println(tree.toStringTree(parser));
 		visitor.visit(tree);
+		
 		
 	}
 }

@@ -20,6 +20,7 @@ grammar LogoTec;
 	Turtle theTurtle;
 	World theWorld;
 	JFrame ventana;
+	List<ASTNode> body;
 	
 	
 	public LogoTecParser(TokenStream input, TextArea consoleOutput, Turtle turtle, World world){
@@ -37,13 +38,10 @@ grammar LogoTec;
 
 program:
 	{
-		List<ASTNode> body = new ArrayList<ASTNode>();
+		body = new ArrayList<ASTNode>();
 		Context symbolTable = new Context();
 	} 
-	(COMMENT
-	|
-	LINE_COMMENT
-	)
+	comment
 	( statement { body.add($statement.node);} )*
 	{
 		for(ASTNode statement: body){
@@ -208,6 +206,8 @@ turtleFunctions returns [ASTNode node]:
 	| poncolorlapiz     {$node = $poncolorlapiz.node;  }
 	| centro            {$node = $centro.node;         }
 	| espera            {$node = $espera.node;         }
+	| oculta            {$node = $oculta.node;         }
+	| aparece           {$node = $aparece.node;        }
 ;
 
 avanza returns [ASTNode node]: AVANZA math {
@@ -278,6 +278,15 @@ espera returns [ASTNode node]: ESPERA math {
 
 rumbo returns [ASTNode node]: RUMBO {
 			$node = new Rumbo(theTurtle);
+};
+
+
+oculta returns [ASTNode node]: OCULTA {
+			$node = new OcultaTortuga(theTurtle);
+};
+
+aparece returns [ASTNode node]: APARECE {
+			$node = new ApareceTortuga(theTurtle);
 };
 
 /*-------------------------------------------TURTLE EXPRESSIONS------------------------------------------*/
@@ -623,6 +632,8 @@ SUBELAPIZ: 'subelapiz' | 'sb';
 PONCOLORLAPIZ: 'poncolorlapiz'|'poncl';
 CENTRO: 'centro';
 ESPERA: 'espera';
+OCULTA: 'ot' | 'ocultatortuga';
+APARECE: 'at' | 'aparecetortuga';
 
 COLOR: 'blanco' | 'azul' | 'marron' | 'cian' | 'gris' | 'amarillo' | 'negro' | 'rojo' | 'verde';
 //Turtle TOKENS
