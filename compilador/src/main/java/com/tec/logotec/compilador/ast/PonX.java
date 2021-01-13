@@ -1,5 +1,4 @@
 package com.tec.logotec.compilador.ast;
-import java.util.Map;
 import com.tec.logotec.compilador.window.CompilerState;
 
 import com.tec.logotec.compilador.turtle.Turtle;

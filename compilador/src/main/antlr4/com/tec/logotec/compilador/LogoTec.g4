@@ -21,6 +21,7 @@ grammar LogoTec;
 	World theWorld;
 	JFrame ventana;
 	List<ASTNode> body;
+	public Program myProgram;
 	
 	
 	public LogoTecParser(TokenStream input, TextArea consoleOutput, Turtle turtle, World world){
@@ -32,7 +33,7 @@ grammar LogoTec;
 		this.theTurtle.goTo(0, 0);
 		this.theWorld.eraseGround();
 		this.theTurtle.goTo(0,0);
-		this.theTurtle.setHeading(0);
+		this.theTurtle.setHeading(0);	
 	}
 }
 
@@ -40,9 +41,16 @@ program:
 	{
 		body = new ArrayList<ASTNode>();
 		Context symbolTable = new Context();
+		myProgram = new Program();
 	} 
-	comment
-	( statement { body.add($statement.node);} )*
+	comment{
+		body.add($comment.node);
+		myProgram.add($comment.node);
+	}
+	( statement {
+		 body.add($statement.node);
+		myProgram.add($statement.node);
+	} )*
 	{
 		for(ASTNode statement: body){
 			statement.execute(symbolTable);

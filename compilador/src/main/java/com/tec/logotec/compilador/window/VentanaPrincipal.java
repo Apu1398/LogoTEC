@@ -6,12 +6,16 @@ import javax.swing.JFrame;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import com.tec.logotec.compilador.turtle.World;
+import com.tec.logotec.compilador.window.ASTVisualizer.ASTVNode;
 import com.tec.logotec.compilador.LogoTecCustomVisitor;
 import com.tec.logotec.compilador.LogoTecLexer;
 import com.tec.logotec.compilador.LogoTecParser;
 import com.tec.logotec.compilador.turtle.Turtle;
+
+
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -22,6 +26,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 import java.awt.TextArea;
@@ -32,6 +38,8 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+
+
 public class VentanaPrincipal {
 
 	public JFrame frmLogotec;
@@ -39,7 +47,7 @@ public class VentanaPrincipal {
 	
 	private World theWorld;
 	private Turtle theTurtle;
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -58,7 +66,7 @@ public class VentanaPrincipal {
 	private void initialize() {
 		frmLogotec = new JFrame();
 		frmLogotec.setTitle("LogoTec");
-		frmLogotec.setBounds(0, 0, 1350, 730);
+		frmLogotec.setBounds(1400, 0, 1350, 730);
 		frmLogotec.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLogotec.getContentPane().setLayout(null);
 		
@@ -168,6 +176,7 @@ public class VentanaPrincipal {
 		
 		if(CompilerState.getCompilerStatus()) {
 			consoleOutputComponent.setText( consoleOutputComponent.getText() + "Compiled succesful");
+						
 		}
 		
 	}
@@ -181,8 +190,56 @@ public class VentanaPrincipal {
 		
 		if(CompilerState.getCompilerStatus()) {
 			consoleOutputComponent.setText( consoleOutputComponent.getText() + "Compiled succesful");
+			
 		}
 	}
+	
+	private void makeTree(LogoTecParser.ProgramContext tree, LogoTecParser parser) {
+				
+		
+		if(CompilerState.getCompilerStatus()) {
+			
+			
+			int childs = tree.getChildCount();
+			
+			List<ASTVNode> arbol = new ArrayList<ASTVNode>();
+			
+			
+			
+			for(int a = 0; a< childs; a++) {
+				
+				arbol.add(new ASTVNode(tree.getChild(a).getClass().getSimpleName()));		
+				makeTreeAux(tree.getChild(a), parser, arbol.get(a));				
+			}
+			
+			
+			System.out.println(arbol.get(1).childs.get(0).childs.get(0).childs.get(1).childs.get(0).childs.get(0).childs.get(0).value);
+			
+		}
+		
+	}
+	
+	private void makeTreeAux(ParseTree child, LogoTecParser parser, ASTVNode parent) {
+		
+		if(child.getChildCount() == 0) {
+			
+			parent.addChild(new ASTVNode(child.toStringTree(parser)));			
+
+		}
+		else {
+			for(int a  = 0; a< child.getChildCount(); a ++ ) {
+				ASTVNode tmp = null;
+				if (!child.getChild(a).getClass().getSimpleName().equals("TerminalNodeImpl")) {
+					tmp = new ASTVNode(child.getChild(a).getClass().getSimpleName().replace("Context", ""));
+					parent.addChild(tmp);
+					makeTreeAux(child.getChild(a),parser, tmp);
+					}
+				else {
+					makeTreeAux(child.getChild(a),parser, parent);
+					}
+				}
+			}
+		}
 	
 	private void doMagic() throws IOException {
 		FileWriter myWriter = new FileWriter("input.smp");
@@ -206,9 +263,13 @@ public class VentanaPrincipal {
 		parser.addErrorListener(errorListener);
 
 		LogoTecParser.ProgramContext tree = parser.program();
-		LogoTecCustomVisitor visitor = new LogoTecCustomVisitor();
-		System.out.println(tree.toStringTree(parser));
+		LogoTecCustomVisitor visitor = new LogoTecCustomVisitor();	
+		
 		visitor.visit(tree);
+			
+		makeTree(tree,parser);	
+		
+		
 		
 		
 	}

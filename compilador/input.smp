@@ -1,25 +1,2 @@
-/*Codigo que crea un estrella de 5 puntas
-Dibujo hecho por: José Pablo Fuentes Apú
-Enero del 2021 */
-
-
-Haz x 500
-
-subelapiz
-
-pony -180
-
-ponx -60
-
-gi 44
-
-bajalapiz 
-
-Mientras (x >= 0) [
-
-
-	av x
-	gi 144
-
-	Inic x = x-8
-]
+//Esto es un comentario
+av 60
