@@ -2,6 +2,8 @@ package com.tec.logotec.compilador.ast;
 
 import java.util.List;
 
+import com.tec.logotec.compilador.window.CompilerState;
+
 public class Repite implements ASTNode {
 
 
@@ -21,13 +23,14 @@ public class Repite implements ASTNode {
 
 	@Override
 	public Object execute(Context symbolTable) {
-		numberCondition = numberConditionCopy;
-		while( 0 < numberCondition) {
-			for (ASTNode statement : body) {
-				statement.execute(symbolTable);
+			numberCondition = numberConditionCopy;
+			while( 0 < numberCondition) {
+				for (ASTNode statement : body) {
+					statement.execute(symbolTable);
+				}
+				numberCondition--;
 			}
-			numberCondition--;
-		}
+		
 		return null;
 	}
 

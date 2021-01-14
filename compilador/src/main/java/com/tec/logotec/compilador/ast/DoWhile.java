@@ -18,6 +18,7 @@ public class DoWhile implements ASTNode {
 	
 	@Override
 	public Object execute(Context symbolTable) {
+		
 		do {
 			for (ASTNode statement : body) {
 				statement.execute(symbolTable);

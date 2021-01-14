@@ -2,6 +2,8 @@ package com.tec.logotec.compilador.ast;
 
 import java.util.List;
 
+import com.tec.logotec.compilador.window.CompilerState;
+
 public class Suma implements ASTNode {
 
 private List<ASTNode> parameters; 
@@ -15,14 +17,14 @@ private List<ASTNode> parameters;
 	@Override
 	public Object execute(Context symbolTable) 
 	{
+		
 		int resultado = 0;
 		
 		for (ASTNode astNode : parameters) {
 			resultado += (int) astNode.execute(symbolTable);
-		}
-		
-		
-		return resultado;
+		}			
+			
+		return resultado;	
 	}
 
 }

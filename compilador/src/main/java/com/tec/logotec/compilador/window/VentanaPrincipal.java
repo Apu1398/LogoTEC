@@ -267,7 +267,7 @@ public class VentanaPrincipal {
 		
 		visitor.visit(tree);
 			
-		makeTree(tree,parser);	
+		//makeTree(tree,parser);	
 		
 		
 		
