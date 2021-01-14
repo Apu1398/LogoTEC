@@ -1,17 +1,6 @@
 //Esto es un comentario
-<<<<<<< HEAD
-Haz num 7
 
-Mientras(mayorque? (num 9))
-[
-
-println 8
-=======
-
-Haz n 4
-Mientras(n >0)
-[
-	println 1
-	Inic n = n -1
->>>>>>> 54a17105bff8e47216797fde01a9692776a6672d
+repite(4)[
+av 60
+gi 90
 ]

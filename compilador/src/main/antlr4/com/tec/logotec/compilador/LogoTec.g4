@@ -39,10 +39,7 @@ program:
 		List<ASTNode> body = new ArrayList<ASTNode>();
 		Context symbolTable = new Context();
 	} 
-	(COMMENT
-	|
-	LINE_COMMENT
-	)
+	comment
 	( statement { body.add($statement.node);} )*
 	{	try{
 			for(ASTNode statement: body){

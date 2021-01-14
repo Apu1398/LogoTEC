@@ -9,7 +9,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import com.tec.logotec.compilador.turtle.World;
-import com.tec.logotec.compilador.window.ASTVisualizer.ASTVNode;
 import com.tec.logotec.compilador.LogoTecCustomVisitor;
 import com.tec.logotec.compilador.LogoTecLexer;
 import com.tec.logotec.compilador.LogoTecParser;
@@ -26,17 +25,20 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
+import javax.swing.JTree;
+
 import java.awt.TextArea;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 
 
@@ -202,36 +204,52 @@ public class VentanaPrincipal {
 			
 			int childs = tree.getChildCount();
 			
-			List<ASTVNode> arbol = new ArrayList<ASTVNode>();
 			
 			
+			DefaultMutableTreeNode raiz = new DefaultMutableTreeNode("Program");
+						
 			
 			for(int a = 0; a< childs; a++) {
 				
-				arbol.add(new ASTVNode(tree.getChild(a).getClass().getSimpleName()));		
-				makeTreeAux(tree.getChild(a), parser, arbol.get(a));				
+				DefaultMutableTreeNode tmp = new DefaultMutableTreeNode(tree.getChild(a).getClass().getSimpleName().replace("Context", "")); 
+				
+				raiz.add(tmp);		
+				makeTreeAux(tree.getChild(a), parser, tmp);				
 			}
 			
 			
-			//System.out.println(arbol.get(1).childs.get(0).childs.get(0).childs.get(1).childs.get(0).childs.get(0).childs.get(0).value);
+			JTree arbol = new JTree(raiz);
+			
+			
+			JFrame ASTVisualizer = new JFrame();
+			
+			Container laminaContenido = ASTVisualizer.getContentPane();
+			
+			laminaContenido.add(new JScrollPane(arbol));
+			ASTVisualizer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			ASTVisualizer.setBounds(300, 300, 600, 600);
+			ASTVisualizer.setVisible(true);
+			
+			
+			
 			
 		}
 		
 	}
 	
-	private void makeTreeAux(ParseTree child, LogoTecParser parser, ASTVNode parent) {
+	private void makeTreeAux(ParseTree child, LogoTecParser parser, DefaultMutableTreeNode parent) {
 		
 		if(child.getChildCount() == 0) {
 			
-			parent.addChild(new ASTVNode(child.toStringTree(parser)));			
+			parent.add(new DefaultMutableTreeNode(child.toStringTree(parser)));			
 
 		}
 		else {
 			for(int a  = 0; a< child.getChildCount(); a ++ ) {
-				ASTVNode tmp = null;
+				DefaultMutableTreeNode tmp = null;
 				if (!child.getChild(a).getClass().getSimpleName().equals("TerminalNodeImpl")) {
-					tmp = new ASTVNode(child.getChild(a).getClass().getSimpleName().replace("Context", ""));
-					parent.addChild(tmp);
+					tmp = new DefaultMutableTreeNode(child.getChild(a).getClass().getSimpleName().replace("Context", ""));
+					parent.add(tmp);
 					makeTreeAux(child.getChild(a),parser, tmp);
 					}
 				else {
@@ -267,7 +285,7 @@ public class VentanaPrincipal {
 		
 		visitor.visit(tree);
 			
-		//makeTree(tree,parser);	
+		makeTree(tree,parser);	
 		
 		
 		
