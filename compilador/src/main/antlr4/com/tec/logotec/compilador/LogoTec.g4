@@ -1,6 +1,3 @@
-
-
-
 grammar LogoTec;
 
 @parser::header {
@@ -9,48 +6,23 @@ grammar LogoTec;
 	import java.util.List;
 	import java.util.ArrayList;
 	import com.tec.logotec.compilador.ast.*;
-	import com.tec.logotec.compilador.turtle.*;
-	import java.awt.TextArea;
-	import javax.swing.JFrame;
 }
 
 @parser::members {
 	Map<String, Object> symbolTable2 = new HashMap<String, Object>();
-	TextArea consoleOutput;
-	Turtle theTurtle;
-	World theWorld;
-	JFrame ventana;
-	List<ASTNode> body;
-	public Program myProgram;
-	
-	
-	public LogoTecParser(TokenStream input, TextArea consoleOutput, Turtle turtle, World world){
-		this(input);
-		this.consoleOutput = consoleOutput;
-		this.theTurtle = turtle;
-		this.ventana = ventana;
-		this.theWorld = world;
-		this.theTurtle.goTo(0, 0);
-		this.theWorld.eraseGround();
-		this.theTurtle.goTo(0,0);
-		this.theTurtle.setHeading(0);	
-	}
 }
+
 
 program:
 	{
-		body = new ArrayList<ASTNode>();
+		List<ASTNode> body = new ArrayList<ASTNode>();
 		Context symbolTable = new Context();
-		myProgram = new Program();
 	} 
-	comment{
-		body.add($comment.node);
-		myProgram.add($comment.node);
-	}
-	( statement {
-		 body.add($statement.node);
-		myProgram.add($statement.node);
-	} )*
+	(COMMENT
+	|
+	LINE_COMMENT
+	)
+	( statement { body.add($statement.node);} )*
 	{
 		for(ASTNode statement: body){
 			statement.execute(symbolTable);
@@ -65,9 +37,11 @@ statement returns [ASTNode node]:
 	| var_assignment	{$node = $var_assignment.node; }
 	| comment  			{$node = $comment.node;	       }
 	| var_init			{$node = $var_init.node; 	   }
-	| println 	  		{$node = $println.node;        }
+	| var_inc			{$node = $var_inc.node;		   }
+	| var_inc_by_numb   {$node = $var_inc_by_numb.node;}
+	| println 	  		{$node = $println.node;        } 
 	| flowFunctions     {$node = $flowFunctions.node;  }
-	| turtleFunctions   {$node = $turtleFunctions.node;}
+	//| turtleFunctions   {$node = $turtleFunctions.node;}
 	| type       		{$node = $type.node;   	   	   }
 ;
 
@@ -107,6 +81,28 @@ var_assignment returns [ASTNode node]:
 	INIC ID ASSIGN type 
 	{
 		$node = new VarAssignment($ID.text, $type.node);
+	}
+;
+
+var_inc returns [ASTNode node]:
+	INC 
+	OPEN_SQUARE_BRACKET 
+	ID math
+	CLOSE_SQUARE_BRACKET
+	{
+		$node = new VarInc($ID.text,$math.node);
+		
+	}
+;
+
+
+var_inc_by_numb returns [ASTNode node]:
+	INC 
+	OPEN_SQUARE_BRACKET 
+	ID 
+	CLOSE_SQUARE_BRACKET
+	{
+		$node = new VarIncByNumb($ID.text);
 	}
 ;
 
@@ -197,15 +193,13 @@ doWhile returns [ASTNode node]:
 
 /*-------------------------------------------TURTLE EXPRESSIONS------------------------------------------*/
 
-
+/*
 turtleFunctions returns [ASTNode node]:
-     avanza             {$node = $avanza.node;		   }
+     avanza            {$node = $avanza.node;		   }
 	| retrocede         {$node = $retrocede.node;      }
 	| giraderecha       {$node = $giraderecha.node;    }
 	| giraizquierda     {$node = $giraizquierda.node;  }
 	| ponpos		    {$node = $ponpos.node;         }
-	| ponx   		    {$node = $ponx.node;           }
-	| pony	     	    {$node = $pony.node;           }
 	| ponrumbo		    {$node = $ponrumbo.node;       }
 	| pongoma   		{$node = $pongoma.node;        }
 	| quitagoma	   		{$node = $quitagoma.node;      }
@@ -214,8 +208,6 @@ turtleFunctions returns [ASTNode node]:
 	| poncolorlapiz     {$node = $poncolorlapiz.node;  }
 	| centro            {$node = $centro.node;         }
 	| espera            {$node = $espera.node;         }
-	| oculta            {$node = $oculta.node;         }
-	| aparece           {$node = $aparece.node;        }
 ;
 
 avanza returns [ASTNode node]: AVANZA math {
@@ -283,19 +275,13 @@ espera returns [ASTNode node]: ESPERA math {
 			$node = new Espera($math.node, theTurtle);
 }; 
 
+ */
 
+
+/*
 rumbo returns [ASTNode node]: RUMBO {
 			$node = new Rumbo(theTurtle);
-};
-
-
-oculta returns [ASTNode node]: OCULTA {
-			$node = new OcultaTortuga(theTurtle);
-};
-
-aparece returns [ASTNode node]: APARECE {
-			$node = new ApareceTortuga(theTurtle);
-};
+};*/
 
 /*-------------------------------------------TURTLE EXPRESSIONS------------------------------------------*/
 
@@ -319,9 +305,6 @@ type returns [ASTNode node]:
 logic_Master returns [ASTNode node]:
 		y_logico  	{$node = $y_logico.node;   }
 		|o_logico 	{$node = $o_logico.node;   }
-		|mayorque 	{$node = $mayorque.node;   }
-		|menorque 	{$node = $menorque.node;   }
-		|iguales  	{$node = $iguales.node;    }
 		|logic    	{$node = $logic.node;      }
 		|booleanTerm{$node = $booleanTerm.node;}
 ;
@@ -337,6 +320,14 @@ o_logico returns [ASTNode node]:
 		{
 			$node = new Or($l1.node, $l2.node);
 		};
+
+logicFunction returns [ASTNode node]:
+		mayorque {$node = $mayorque.node;}
+		|
+		menorque {$node = $menorque.node;}
+		|
+		iguales  {$node = $iguales.node; }
+;
 		
 mayorque returns [ASTNode node]:
 		MAYORQUE PAR_OPEN l1 = logic_Master l2=logic_Master PAR_CLOSE
@@ -374,7 +365,8 @@ comparison returns [ASTNode node]:
 		 |LEQ C2=math {$node = new LowerEqual($C1.node,$C2.node);  }
 		 |EQ  C2=math {$node = new Equal($C1.node,$C2.node);       }
 		 |DIF C2=math {$node = new Different($C1.node,$C2.node);   }
-		 )+
+		 )* 
+		 |booleanTerm {$node = $booleanTerm.node;				   }
 ;	
  
 /*-----------------------------------------LOGIC EXPRESSIONS----------------------------------------- */
@@ -580,6 +572,11 @@ booleanTerm returns [ASTNode node]:
 	{
 		$node = new Constant(Boolean.parseBoolean($BOOLEAN.text));
 	}
+	|
+	logicFunction 
+	{
+		$node = $logicFunction.node;
+	}
 ;
 
 /*------------------------------------------BOOLEAN VALUES------------------------------------------ */
@@ -605,7 +602,7 @@ stringTerm returns [ASTNode node]:
 println returns [ASTNode node]: 
 	PRINTLN type 
 	{
-		$node  = new Println($type.node, consoleOutput);
+		$node  = new Println($type.node);
 	};
 
 comment returns [ASTNode node]:
@@ -640,8 +637,6 @@ SUBELAPIZ: 'subelapiz' | 'sb';
 PONCOLORLAPIZ: 'poncolorlapiz'|'poncl';
 CENTRO: 'centro';
 ESPERA: 'espera';
-OCULTA: 'ot' | 'ocultatortuga';
-APARECE: 'at' | 'aparecetortuga';
 
 COLOR: 'blanco' | 'azul' | 'marron' | 'cian' | 'gris' | 'amarillo' | 'negro' | 'rojo' | 'verde';
 //Turtle TOKENS
@@ -660,6 +655,7 @@ DOWHILE: 'HazMientras' | 'HazHasta';
 //VAR TOKENS
 DO: 'Haz';
 INIC: 'Inic';
+INC: 'Inc';
 //VAR TOKENS
 
 // ----------------------------------------ARITMETIC TOKENS-----------------------------------
