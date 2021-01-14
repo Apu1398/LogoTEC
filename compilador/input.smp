@@ -1,2 +1,9 @@
 //Esto es un comentario
-av 60
+
+Haz num 4
+Mientras(mayorque? (num  0) )
+[
+	av 50
+	gi 90
+	Inc [num menos(1)]
+]
