@@ -366,7 +366,7 @@ comparison returns [ASTNode node]:
 		 |EQ  C2=math {$node = new Equal($C1.node,$C2.node);       }
 		 |DIF C2=math {$node = new Different($C1.node,$C2.node);   }
 		 )* 
-		 |booleanTerm {$node = $booleanTerm.node:				   }
+		 |booleanTerm {$node = $booleanTerm.node;				   }
 ;	
  
 /*-----------------------------------------LOGIC EXPRESSIONS----------------------------------------- */
