@@ -1,9 +1,8 @@
 //Esto es un comentario
 
 Haz num 4
-Mientras(num>0)
+Mientras(mayorque?(num 0))
 [
-	av 50
-	gi 90
+	println 5
 	Inc [num menos(1)]
 ]

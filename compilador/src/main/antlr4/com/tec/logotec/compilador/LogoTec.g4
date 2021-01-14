@@ -517,7 +517,7 @@ redondea returns [ASTNode node]:
 			$node = new Redondea($t1.node);
 		}
 ;
- 
+  
 menos returns [ASTNode node]:
 		MENOS
 		PAR_OPEN 
