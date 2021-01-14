@@ -6,12 +6,33 @@ grammar LogoTec;
 	import java.util.List;
 	import java.util.ArrayList;
 	import com.tec.logotec.compilador.ast.*;
+	import com.tec.logotec.compilador.turtle.*;
+	import java.awt.TextArea;
+	import javax.swing.JFrame;
 }
 
 @parser::members {
 	Map<String, Object> symbolTable2 = new HashMap<String, Object>();
+	TextArea consoleOutput;
+	Turtle theTurtle;
+	World theWorld;
+	JFrame ventana;
+	List<ASTNode> body;
+	public Program myProgram;
+	
+	
+	public LogoTecParser(TokenStream input, TextArea consoleOutput, Turtle turtle, World world){
+		this(input);
+		this.consoleOutput = consoleOutput;
+		this.theTurtle = turtle;
+		this.ventana = ventana;
+		this.theWorld = world;
+		this.theTurtle.goTo(0, 0);
+		this.theWorld.eraseGround();
+		this.theTurtle.goTo(0,0);
+		this.theTurtle.setHeading(0);	
+	}
 }
-
 
 program:
 	{
@@ -41,7 +62,7 @@ statement returns [ASTNode node]:
 	| var_inc_by_numb   {$node = $var_inc_by_numb.node;}
 	| println 	  		{$node = $println.node;        } 
 	| flowFunctions     {$node = $flowFunctions.node;  }
-	//| turtleFunctions   {$node = $turtleFunctions.node;}
+	| turtleFunctions   {$node = $turtleFunctions.node;}
 	| type       		{$node = $type.node;   	   	   }
 ;
 
@@ -305,6 +326,9 @@ type returns [ASTNode node]:
 logic_Master returns [ASTNode node]:
 		y_logico  	{$node = $y_logico.node;   }
 		|o_logico 	{$node = $o_logico.node;   }
+		|mayorque 	{$node = $mayorque.node;   }
+		|menorque 	{$node = $menorque.node;   }
+		|iguales  	{$node = $iguales.node;    }
 		|logic    	{$node = $logic.node;      }
 		|booleanTerm{$node = $booleanTerm.node;}
 ;
@@ -320,14 +344,6 @@ o_logico returns [ASTNode node]:
 		{
 			$node = new Or($l1.node, $l2.node);
 		};
-
-logicFunction returns [ASTNode node]:
-		mayorque {$node = $mayorque.node;}
-		|
-		menorque {$node = $menorque.node;}
-		|
-		iguales  {$node = $iguales.node; }
-;
 		
 mayorque returns [ASTNode node]:
 		MAYORQUE PAR_OPEN l1 = logic_Master l2=logic_Master PAR_CLOSE
@@ -365,13 +381,8 @@ comparison returns [ASTNode node]:
 		 |LEQ C2=math {$node = new LowerEqual($C1.node,$C2.node);  }
 		 |EQ  C2=math {$node = new Equal($C1.node,$C2.node);       }
 		 |DIF C2=math {$node = new Different($C1.node,$C2.node);   }
-		 )* 
-<<<<<<< HEAD
-		 |booleanTerm {$node = $booleanTerm.node;				   }
-=======
->>>>>>> parent of e8e371c... Arregla conflictos
-;	
- 
+		 )+
+;
 /*-----------------------------------------LOGIC EXPRESSIONS----------------------------------------- */
  
 /*---------------------------------------ARITMETIC EXPRESSIONS--------------------------------------- */
@@ -575,11 +586,6 @@ booleanTerm returns [ASTNode node]:
 	{
 		$node = new Constant(Boolean.parseBoolean($BOOLEAN.text));
 	}
-	|
-	logicFunction 
-	{
-		$node = $logicFunction.node;
-	}
 ;
 
 /*------------------------------------------BOOLEAN VALUES------------------------------------------ */
@@ -605,7 +611,7 @@ stringTerm returns [ASTNode node]:
 println returns [ASTNode node]: 
 	PRINTLN type 
 	{
-		$node  = new Println($type.node);
+		$node  = new Println($type.node, consoleOutput);
 	};
 
 comment returns [ASTNode node]:
