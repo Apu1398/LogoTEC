@@ -1,8 +1,8 @@
 //Esto es un comentario
 
-Haz num 4
-Mientras(mayorque?(num 0))
+Haz n 4
+Mientras(n >0)
 [
-	println 5
-	Inc [num menos(1)]
+	println 1
+	Inic n = n -1
 ]

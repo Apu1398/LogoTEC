@@ -44,10 +44,14 @@ program:
 	LINE_COMMENT
 	)
 	( statement { body.add($statement.node);} )*
-	{
-		for(ASTNode statement: body){
-			statement.execute(symbolTable);
+	{	try{
+			for(ASTNode statement: body){
+				statement.execute(symbolTable);
+			}
+		}catch(Exception e){
+			
 		}
+
 	}
 ;
 
@@ -346,19 +350,19 @@ o_logico returns [ASTNode node]:
 		};
 		
 mayorque returns [ASTNode node]:
-		MAYORQUE PAR_OPEN l1 = logic_Master l2=logic_Master PAR_CLOSE
+		MAYORQUE PAR_OPEN l1 = math l2=math PAR_CLOSE
 		{
 			$node = new Greater($l1.node, $l2.node);
 		};
 		
 menorque returns [ASTNode node]:
-		MENORQUE PAR_OPEN l1 = logic_Master l2=logic_Master PAR_CLOSE
+		MENORQUE PAR_OPEN l1=math l2=math PAR_CLOSE
 		{
 			$node = new Lower($l1.node, $l2.node);
 		};
 		 
 iguales returns [ASTNode node]:
-		IGUALES PAR_OPEN l1 = logic_Master l2=logic_Master PAR_CLOSE
+		IGUALES PAR_OPEN l1 = math l2=math PAR_CLOSE
 		{
 			$node = new Equal($l1.node, $l2.node);
 		};
@@ -382,6 +386,7 @@ comparison returns [ASTNode node]:
 		 |EQ  C2=math {$node = new Equal($C1.node,$C2.node);       }
 		 |DIF C2=math {$node = new Different($C1.node,$C2.node);   }
 		 )+
+		 |booleanTerm {$node = $booleanTerm.node;                  }
 ;
 /*-----------------------------------------LOGIC EXPRESSIONS----------------------------------------- */
  
@@ -520,7 +525,7 @@ redondea returns [ASTNode node]:
   
 menos returns [ASTNode node]:
 		MENOS
-		PAR_OPEN 
+		PAR_OPEN 	
 		t1= math
 		PAR_CLOSE
 		{
