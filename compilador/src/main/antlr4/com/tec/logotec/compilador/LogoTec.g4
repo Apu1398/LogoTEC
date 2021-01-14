@@ -193,7 +193,7 @@ doWhile returns [ASTNode node]:
 
 /*-------------------------------------------TURTLE EXPRESSIONS------------------------------------------*/
 
-/*
+
 turtleFunctions returns [ASTNode node]:
      avanza            {$node = $avanza.node;		   }
 	| retrocede         {$node = $retrocede.node;      }
@@ -275,13 +275,13 @@ espera returns [ASTNode node]: ESPERA math {
 			$node = new Espera($math.node, theTurtle);
 }; 
 
- */
+ 
 
 
-/*
+
 rumbo returns [ASTNode node]: RUMBO {
 			$node = new Rumbo(theTurtle);
-};*/
+};
 
 /*-------------------------------------------TURTLE EXPRESSIONS------------------------------------------*/
 
