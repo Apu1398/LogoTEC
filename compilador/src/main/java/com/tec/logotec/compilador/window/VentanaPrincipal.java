@@ -213,7 +213,7 @@ public class VentanaPrincipal {
 			}
 			
 			
-			System.out.println(arbol.get(1).childs.get(0).childs.get(0).childs.get(1).childs.get(0).childs.get(0).childs.get(0).value);
+			//System.out.println(arbol.get(1).childs.get(0).childs.get(0).childs.get(1).childs.get(0).childs.get(0).childs.get(0).value);
 			
 		}
 		
