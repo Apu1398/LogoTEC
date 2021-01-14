@@ -1,1 +1,8 @@
 //Esto es un comentario
+Haz num 7
+
+Mientras(mayorque? (num 9))
+[
+
+println 8
+]
