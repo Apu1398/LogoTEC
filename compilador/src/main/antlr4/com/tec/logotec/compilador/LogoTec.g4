@@ -366,7 +366,10 @@ comparison returns [ASTNode node]:
 		 |EQ  C2=math {$node = new Equal($C1.node,$C2.node);       }
 		 |DIF C2=math {$node = new Different($C1.node,$C2.node);   }
 		 )* 
+<<<<<<< HEAD
 		 |booleanTerm {$node = $booleanTerm.node;				   }
+=======
+>>>>>>> parent of e8e371c... Arregla conflictos
 ;	
  
 /*-----------------------------------------LOGIC EXPRESSIONS----------------------------------------- */
