@@ -14,12 +14,15 @@ import com.tec.logotec.compilador.LogoTecLexer;
 import com.tec.logotec.compilador.LogoTecParser;
 import com.tec.logotec.compilador.turtle.Turtle;
 
-
-
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -31,14 +34,17 @@ import javax.swing.JTree;
 
 import java.awt.TextArea;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.ScrollPane;
 
 
 
@@ -49,6 +55,11 @@ public class VentanaPrincipal {
 	
 	private World theWorld;
 	private Turtle theTurtle;
+	
+	private JDialog dialog;
+	private JLabel lblAST;
+	private JScrollPane jsp;
+	
 	
 	/**
 	 * Launch the application.
@@ -68,11 +79,11 @@ public class VentanaPrincipal {
 	private void initialize() {
 		frmLogotec = new JFrame();
 		frmLogotec.setTitle("LogoTec");
-		frmLogotec.setBounds(1400, 0, 1350, 730);
+		frmLogotec.setBounds(0, 0, 1350, 730);
 		frmLogotec.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLogotec.getContentPane().setLayout(null);
-		
-		JButton btnCompilar = new JButton("Compilar");
+				
+		JButton btnCompilar = new JButton("Compile");
 		btnCompilar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -82,10 +93,11 @@ public class VentanaPrincipal {
 				}				
 			}
 		});
-		btnCompilar.setBounds(10, 442, 89, 23);
+		
+		btnCompilar.setBounds(10, 442, 101, 23);
 		frmLogotec.getContentPane().add(btnCompilar);
 		
-		JButton btnEjecutar = new JButton("Ejecutar");
+		JButton btnEjecutar = new JButton("Run");
 		btnEjecutar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -96,7 +108,7 @@ public class VentanaPrincipal {
 			}
 		});
 		
-		btnEjecutar.setBounds(109, 442, 89, 23);
+		btnEjecutar.setBounds(121, 442, 59, 23);
 		frmLogotec.getContentPane().add(btnEjecutar);
 		
 		JSeparator separator = new JSeparator();
@@ -116,7 +128,7 @@ public class VentanaPrincipal {
 		txtConsola.setBounds(10, 512, 516, 168);
 		frmLogotec.getContentPane().add(txtConsola);
 		
-		JLabel lblNewLabel = new JLabel("Consola");
+		JLabel lblNewLabel = new JLabel("Console");
 		lblNewLabel.setBounds(10, 492, 46, 14);
 		frmLogotec.getContentPane().add(lblNewLabel);
 		
@@ -131,9 +143,9 @@ public class VentanaPrincipal {
 		theWorld.setSize(774, 680);
 	    theWorld.setLocation(550,0);
 		theTurtle = new Turtle(theWorld);
-		frmLogotec.getContentPane().add(theWorld);	 
+		frmLogotec.getContentPane().add(theWorld);
 		
-		JButton btnAbrir = new JButton("Abrir");
+		JButton btnAbrir = new JButton("Open");
 		btnAbrir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -164,8 +176,17 @@ public class VentanaPrincipal {
 			}
 				}
 			});
-		btnAbrir.setBounds(437, 442, 89, 23);
+		btnAbrir.setBounds(457, 442, 69, 23);
 		frmLogotec.getContentPane().add(btnAbrir);
+		
+		JButton btnASTVisualizer = new JButton("AST");
+		btnASTVisualizer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				showAST();
+			}
+		});
+		btnASTVisualizer.setBounds(190, 442, 59, 23);
+		frmLogotec.getContentPane().add(btnASTVisualizer);
 		 
 	}
 	
@@ -195,7 +216,52 @@ public class VentanaPrincipal {
 			
 		}
 	}
-	
+	private void showAST() {
+		if(CompilerState.getCompilerStatus()) {
+			
+BufferedImage img = null;
+			
+			try {
+				img = ImageIO.read(new File("out.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if (dialog == null) {
+				dialog = new JDialog(frmLogotec);
+				dialog.setBounds(200, 200, 600, 600);
+				dialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
+				dialog.getContentPane().setLayout(new BorderLayout(0, 0));
+				lblAST = new JLabel(new ImageIcon(img), JLabel.CENTER);
+				jsp = new JScrollPane(lblAST);
+	            dialog.getContentPane().add(jsp, BorderLayout.CENTER);
+			}			
+			lblAST.setIcon(new ImageIcon(img));
+			      
+            
+			lblAST.revalidate();
+	        lblAST.repaint();
+	        lblAST.update(lblAST.getGraphics());
+            
+            
+
+            jsp.setViewportView(lblAST);
+            
+            dialog.revalidate();
+	        dialog.repaint();
+	        dialog.update(dialog.getGraphics());
+	        
+            dialog.setVisible(true);            
+            
+            
+			
+			
+		}else{
+			JOptionPane.showMessageDialog(frmLogotec, "El último codigo no ha compilado o tiene errores", "No se puede mostrar", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		
+	}
 	private void makeTree(LogoTecParser.ProgramContext tree, LogoTecParser parser) {
 				
 		
@@ -205,58 +271,74 @@ public class VentanaPrincipal {
 			int childs = tree.getChildCount();
 			
 			
-			
-			DefaultMutableTreeNode raiz = new DefaultMutableTreeNode("Program");
-						
-			
-			for(int a = 0; a< childs; a++) {
+			GraphViz gv = new GraphViz();
+			gv.addln(gv.start_graph());
 				
-				DefaultMutableTreeNode tmp = new DefaultMutableTreeNode(tree.getChild(a).getClass().getSimpleName().replace("Context", "")); 
+			for(Integer a = 0; a< childs; a++) {
 				
-				raiz.add(tmp);		
-				makeTreeAux(tree.getChild(a), parser, tmp);				
+				gv.addln(a+ "[label = " + tree.getChild(a).getClass().getSimpleName().replace("Context", "") + "];");
+				
+				gv.addln("Program -> " + a + ";");
+				
+										
+				makeTreeAux(tree.getChild(a), parser,gv,  a.toString());				
 			}
-			
-			
-			JTree arbol = new JTree(raiz);
-			
-			
-			JFrame ASTVisualizer = new JFrame();
-			
-			Container laminaContenido = ASTVisualizer.getContentPane();
-			
-			laminaContenido.add(new JScrollPane(arbol));
-			ASTVisualizer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			ASTVisualizer.setBounds(300, 300, 600, 600);
-			ASTVisualizer.setVisible(true);
-			
-			
-			
+						
+			gv.addln(gv.end_graph());
+			String type = "png";
+			File out = new File("out." + type);
+			gv.writeGraphToFile( gv.getGraph( gv.getDotSource(), type ), out );		
 			
 		}
 		
 	}
 	
-	private void makeTreeAux(ParseTree child, LogoTecParser parser, DefaultMutableTreeNode parent) {
-		
-		if(child.getChildCount() == 0) {
-			
-			parent.add(new DefaultMutableTreeNode(child.toStringTree(parser)));			
+	private void makeTreeAux(ParseTree child, LogoTecParser parser, GraphViz gv, String parent) {
 
-		}
-		else {
-			for(int a  = 0; a< child.getChildCount(); a ++ ) {
-				DefaultMutableTreeNode tmp = null;
+		if (child.getChildCount() > 0) {
+			for (Integer a = 0; a < child.getChildCount(); a++) {
+				String id = parent + a.toString();
 				if (!child.getChild(a).getClass().getSimpleName().equals("TerminalNodeImpl")) {
-					tmp = new DefaultMutableTreeNode(child.getChild(a).getClass().getSimpleName().replace("Context", ""));
-					parent.add(tmp);
-					makeTreeAux(child.getChild(a),parser, tmp);
-					}
-				else {
-					makeTreeAux(child.getChild(a),parser, parent);
-					}
+					gv.addln(id + "[label =" + child.getChild(a).getClass().getSimpleName().replace("Context", "")
+							+ "];");
+					gv.addln(parent + "->" + id + ";");
+
+					makeTreeAux(child.getChild(a), parser, gv, id);
+				} else {
+					makeTerminalNode(child.getChild(a).toStringTree(parser).toString(), gv, parent, id);
 				}
 			}
+		}
+	}
+	
+	public void makeTerminalNode(String terminal, GraphViz gv, String parent, String id) {
+
+			Boolean bool = (terminal.equals("[") | terminal.equals("]") | terminal.equals("(") | terminal.equals(")"));
+
+			if (!bool) {
+
+				switch (terminal) {
+				case "+":
+					terminal = "mas";
+					break;
+				case "-":
+					terminal = "menos";
+					break;
+				case "/":
+					terminal = "entre";
+					break;
+				case "*":
+					terminal = "por";
+					break;
+
+				}
+
+				String tmp = terminal.replace("//", "").replace("/*", "").replace("/*", "").replace(" ", "_");
+				gv.addln(id + " [label = " + tmp + "];");
+				gv.addln(parent + " -> " + id + ";");
+
+			}
+
 		}
 	
 	private void doMagic() throws IOException {
@@ -274,7 +356,6 @@ public class VentanaPrincipal {
 		LogoTecLexer lexer = new LogoTecLexer(new ANTLRFileStream(program));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		LogoTecParser parser = new LogoTecParser(tokens,consoleOutputComponent, theTurtle, theWorld);
-		//LogoTecParser parser = new LogoTecParser(tokens);
 		parser.removeErrorListeners();
 		
 	    ANTLRErrorListener errorListener = new ErrorListener(consoleOutputComponent);
@@ -285,10 +366,7 @@ public class VentanaPrincipal {
 		
 		visitor.visit(tree);
 			
-		makeTree(tree,parser);	
-		
-		
-		
+		makeTree(tree,parser);			
 		
 	}
 }
