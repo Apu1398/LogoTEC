@@ -72,6 +72,10 @@ statement returns [ASTNode node]:
 	| giraderecha       {$node = $giraderecha.node;    }
 	| giraizquierda     {$node = $giraizquierda.node;  }
 	| ponpos		    {$node = $ponpos.node;         }
+	| pony		        {$node = $pony.node;           }
+	| ponx		        {$node = $ponx.node;           }
+	| ocultatortuga     {$node = $ocultatortuga.node;  }
+	| aparecetortuga    {$node = $aparecetortuga.node; }
 	| ponrumbo		    {$node = $ponrumbo.node;       }
 	| pongoma   		{$node = $pongoma.node;        }
 	| quitagoma	   		{$node = $quitagoma.node;      }
@@ -292,6 +296,14 @@ espera returns [ASTNode node]: ESPERA math {
 
 rumbo returns [ASTNode node]: RUMBO {
 			$node = new Rumbo(theTurtle);
+};
+
+ocultatortuga returns [ASTNode node]: OCULTA {
+			$node = new OcultaTortuga(theTurtle);
+};
+
+aparecetortuga returns [ASTNode node]: APARECE {
+			$node = new ApareceTortuga(theTurtle);
 };
 
 /*-------------------------------------------TURTLE EXPRESSIONS------------------------------------------*/
@@ -637,7 +649,8 @@ SUBELAPIZ: 'subelapiz' | 'sb';
 PONCOLORLAPIZ: 'poncolorlapiz'|'poncl';
 CENTRO: 'centro';
 ESPERA: 'espera';
-
+APARECE: 'aparecetortuga' | 'at';
+OCULTA: 'ocultatortuga' | 'ot';
 COLOR: 'blanco' | 'azul' | 'marron' | 'cian' | 'gris' | 'amarillo' | 'negro' | 'rojo' | 'verde';
 //Turtle TOKENS
 
