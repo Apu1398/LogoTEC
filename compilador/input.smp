@@ -1,25 +1,24 @@
-/*Codigo que crea un estrella de 5 puntas
-Dibujo hecho por: José Pablo Fuentes Apú
-Enero del 2021 */
+//Dibuja un sol en el cielo 
 
 
-Haz x 500
+PARA sol[] [
 
-subelapiz
+	subelapiz
 
-pony -180
+	pony 180
 
-ponx -60
+	ponx -60
 
-gi 44
+	bajalapiz 
 
-bajalapiz 
+	poncolorlapiz amarillo
 
-Mientras (x >= 0) [
-
-
-	av x
-	gi 144
-
-	Inic x = x-8
+	repite(360)[
+		av 150
+		gd 100
+	]
 ]
+
+FIN
+
+sol []
