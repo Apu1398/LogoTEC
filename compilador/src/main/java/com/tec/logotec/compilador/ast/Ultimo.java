@@ -15,7 +15,12 @@ public class Ultimo implements ASTNode {
 	
 	@Override
 	public Object execute(Context symbolTable) {
-		return mathExpressions.get(mathExpressions.size() - 1).execute(symbolTable);
+		if (mathExpressions.size() == 0) {
+			return 0;
+
+		} else {
+			return mathExpressions.get(mathExpressions.size() - 1).execute(symbolTable);
+		}
 	}
 
 }

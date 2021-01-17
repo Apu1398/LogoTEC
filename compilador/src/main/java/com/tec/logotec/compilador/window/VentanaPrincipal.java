@@ -357,9 +357,9 @@ public class VentanaPrincipal {
 			}
 
 			String tmp = terminal.replace("//", "").replace("/*", "").replace("*/", "").replace(" ", "_").replace("\n", "").replace("\t", "").replace("\r","").replace(":", "");
-			System.out.println(tmp);
 			gv.addln(id + " [label = " + tmp + "];");
 			gv.addln(parent + " -> " + id + ";");
+			
 
 		}
 
@@ -389,7 +389,7 @@ public class VentanaPrincipal {
 
 		visitor.visit(tree);
 
-		//makeTree(tree, parser);
+		makeTree(tree, parser);
 
 	}
 }

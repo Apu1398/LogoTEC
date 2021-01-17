@@ -84,7 +84,6 @@ statement returns [ASTNode node]:
 	| poncolorlapiz     {$node = $poncolorlapiz.node;  }
 	| centro            {$node = $centro.node;         }
 	| espera            {$node = $espera.node;         }
-	| type       		{$node = $type.node;   	   	   }
 ;
 
 function returns [ASTNode node]:
@@ -597,7 +596,7 @@ enesimo returns [ASTNode node]:
 	}
 	ELEMENTO eneEle=math OPEN_SQUARE_BRACKET ( val=math { body.add($val.node); } )* CLOSE_SQUARE_BRACKET
 	{
-		$node = new Elemento($eneEle.node,body); 
+		$node = new Elemento($eneEle.node,body, consoleOutput); 
 	}
 ;
 
@@ -815,7 +814,7 @@ CLOSE_SQUARE_BRACKET: ']';
 BOOLEAN: 'true' | 'false';
 
 CARACTERES: '_' |'&'| '-'| '@';
-ID: [a-z]([a-zA-Z0-9]|CARACTERES)*;
+ID: [a-z][a-zA-Z0-9_&-@]?[a-zA-Z0-9_&-@]?[a-zA-Z0-9_&-@]?[a-zA-Z0-9_]?[a-zA-Z0-9_]?[a-zA-Z0-9_]?[a-zA-Z0-9_]?[a-zA-Z0-9_]?[a-zA-Z0-9_]?;
 
 STRING: '"' ~('"')* '"';
 NUMBER: [0-9]+;

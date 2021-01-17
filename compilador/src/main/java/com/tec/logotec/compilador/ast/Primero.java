@@ -19,7 +19,7 @@ public class Primero implements ASTNode {
 		if(mathExpressions.size() != 0) {
 			return mathExpressions.get(0).execute(symbolTable);			
 		}else {
-			return null;
+			return 0;
 		}
 	}
 }

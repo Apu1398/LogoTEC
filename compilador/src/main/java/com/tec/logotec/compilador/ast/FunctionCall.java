@@ -19,7 +19,7 @@ public class FunctionCall implements ASTNode {
 	{
 		
 		Function func = (Function)symbolTable.get(name);
-		
+				
 		Context local_context = new Context(func.getMy_context());
 		
 		List<String> arguments_list = func.getArguments();

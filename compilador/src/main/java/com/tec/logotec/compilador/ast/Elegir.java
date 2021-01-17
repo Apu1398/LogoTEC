@@ -13,12 +13,19 @@ public class Elegir implements ASTNode {
 		this.mathExpressions = mathExpressions;
 	}
 
+	
 	@Override
 	public Object execute(Context symbolTable) {
 		Random rand = new Random(); 
 		int size = mathExpressions.size();
-		int rand_int = rand.nextInt(size);
-		return mathExpressions.get(rand_int).execute(symbolTable);
+		if (size == 0) {
+			return 0;
+			
+		}else {
+			int rand_int = rand.nextInt(size);
+			
+			return mathExpressions.get(rand_int).execute(symbolTable);
+		}		
 	}
 
 }
