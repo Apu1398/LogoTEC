@@ -1,0 +1,1 @@
+Instalar y agregar la carpeta "Program files (x86)/GraphViz/Bin" a las variables de entorno

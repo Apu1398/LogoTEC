@@ -39,10 +39,7 @@ program:
 		List<ASTNode> body = new ArrayList<ASTNode>();
 		Context symbolTable = new Context();
 	} 
-	(COMMENT
-	|
-	LINE_COMMENT
-	)
+	comment
 	( statement { body.add($statement.node);} )*
 	{	try{
 			for(ASTNode statement: body){
@@ -65,8 +62,28 @@ statement returns [ASTNode node]:
 	| var_inc			{$node = $var_inc.node;		   }
 	| var_inc_by_numb   {$node = $var_inc_by_numb.node;}
 	| println 	  		{$node = $println.node;        } 
-	| flowFunctions     {$node = $flowFunctions.node;  }
-	| turtleFunctions   {$node = $turtleFunctions.node;}
+	| if_ifelse 		{$node = $if_ifelse.node;      }
+	| if_cond			{$node = $if_cond.node;		   }
+	| loop 		  		{$node = $loop.node;           }
+	| repite 		  	{$node = $repite.node;         }
+	| doWhile			{$node = $doWhile.node;        }
+	| avanza            {$node = $avanza.node;		   }
+	| retrocede         {$node = $retrocede.node;      }
+	| giraderecha       {$node = $giraderecha.node;    }
+	| giraizquierda     {$node = $giraizquierda.node;  }
+	| ponpos		    {$node = $ponpos.node;         }
+	| pony		        {$node = $pony.node;           }
+	| ponx		        {$node = $ponx.node;           }
+	| ocultatortuga     {$node = $ocultatortuga.node;  }
+	| aparecetortuga    {$node = $aparecetortuga.node; }
+	| ponrumbo		    {$node = $ponrumbo.node;       }
+	| pongoma   		{$node = $pongoma.node;        }
+	| quitagoma	   		{$node = $quitagoma.node;      }
+	| bajalapiz   		{$node = $bajalapiz.node;      }
+	| subelapiz   		{$node = $subelapiz.node;      }
+	| poncolorlapiz     {$node = $poncolorlapiz.node;  }
+	| centro            {$node = $centro.node;         }
+	| espera            {$node = $espera.node;         }
 	| type       		{$node = $type.node;   	   	   }
 ;
 
@@ -133,13 +150,6 @@ var_inc_by_numb returns [ASTNode node]:
 
 /*----------------------------------------PROGRAM FLOW EXPRESSIONS----------------------------------------*/
 
-flowFunctions returns [ASTNode node]: 	
-	  if_ifelse 		{$node = $if_ifelse.node;      }
-	| if_cond			{$node = $if_cond.node;		   }
-	| loop 		  		{$node = $loop.node;           }
-	| repite 		  	{$node = $repite.node;         }
-	| doWhile			{$node = $doWhile.node;        }
-;
  
 if_ifelse returns [ASTNode node]: 
 	IFELSE PAR_OPEN logic_Master PAR_CLOSE 
@@ -219,22 +229,6 @@ doWhile returns [ASTNode node]:
 /*-------------------------------------------TURTLE EXPRESSIONS------------------------------------------*/
 
 
-turtleFunctions returns [ASTNode node]:
-     avanza            {$node = $avanza.node;		   }
-	| retrocede         {$node = $retrocede.node;      }
-	| giraderecha       {$node = $giraderecha.node;    }
-	| giraizquierda     {$node = $giraizquierda.node;  }
-	| ponpos		    {$node = $ponpos.node;         }
-	| ponrumbo		    {$node = $ponrumbo.node;       }
-	| pongoma   		{$node = $pongoma.node;        }
-	| quitagoma	   		{$node = $quitagoma.node;      }
-	| bajalapiz   		{$node = $bajalapiz.node;      }
-	| subelapiz   		{$node = $subelapiz.node;      }
-	| poncolorlapiz     {$node = $poncolorlapiz.node;  }
-	| centro            {$node = $centro.node;         }
-	| espera            {$node = $espera.node;         }
-;
-
 avanza returns [ASTNode node]: AVANZA math {
 			$node = new Avanza($math.node, theTurtle);
 			
@@ -300,12 +294,16 @@ espera returns [ASTNode node]: ESPERA math {
 			$node = new Espera($math.node, theTurtle);
 }; 
 
- 
-
-
-
 rumbo returns [ASTNode node]: RUMBO {
 			$node = new Rumbo(theTurtle);
+};
+
+ocultatortuga returns [ASTNode node]: OCULTA {
+			$node = new OcultaTortuga(theTurtle);
+};
+
+aparecetortuga returns [ASTNode node]: APARECE {
+			$node = new ApareceTortuga(theTurtle);
 };
 
 /*-------------------------------------------TURTLE EXPRESSIONS------------------------------------------*/
@@ -651,7 +649,8 @@ SUBELAPIZ: 'subelapiz' | 'sb';
 PONCOLORLAPIZ: 'poncolorlapiz'|'poncl';
 CENTRO: 'centro';
 ESPERA: 'espera';
-
+APARECE: 'aparecetortuga' | 'at';
+OCULTA: 'ocultatortuga' | 'ot';
 COLOR: 'blanco' | 'azul' | 'marron' | 'cian' | 'gris' | 'amarillo' | 'negro' | 'rojo' | 'verde';
 //Turtle TOKENS
 

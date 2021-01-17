@@ -18,8 +18,8 @@ public class CompilerState {
 	}
 	
 	private CompilerState() {
-		this.compilingStatus = true;
-		this.doSomething = true;
+		this.compilingStatus = false;
+		this.doSomething = false;
 		
 	}
 	
