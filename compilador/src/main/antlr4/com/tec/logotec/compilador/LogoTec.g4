@@ -102,6 +102,7 @@ function returns [ASTNode node]:
 	}
 ;
 
+
 function_call returns [ASTNode node]
 :
 	{
@@ -429,6 +430,31 @@ mathFunction returns [ASTNode node]:
 		{
 			$node = $menos.node;
 		}
+		|
+		elegir
+		{
+			$node = $elegir.node;
+		}
+		|
+		cuenta
+		{
+			$node = $cuenta.node;
+		}
+		|
+		ultimo
+		{
+			$node = $ultimo.node;
+		}
+		|
+		enesimo
+		{
+			$node = $enesimo.node;
+		}
+		|
+		primero
+		{
+			$node = $primero.node;
+		}
 		;
 
 suma returns [ASTNode node]: 
@@ -531,6 +557,59 @@ menos returns [ASTNode node]:
 		}
 ;
  
+ 
+elegir returns [ASTNode node]:
+	{
+		List<ASTNode> body = new ArrayList<ASTNode>();
+	}
+	ELEGIR OPEN_SQUARE_BRACKET ( math { body.add($math.node); } )* CLOSE_SQUARE_BRACKET
+	{
+		$node = new Elegir(body); 
+	}
+;
+
+
+cuenta returns [ASTNode node]:
+	{
+		List<ASTNode> body = new ArrayList<ASTNode>();
+	}
+	CUENTA OPEN_SQUARE_BRACKET ( math { body.add($math.node); } )* CLOSE_SQUARE_BRACKET
+	{
+		$node = new Cuenta(body); 
+	}
+; 
+ 
+ 
+ultimo returns [ASTNode node]:
+	{
+		List<ASTNode> body = new ArrayList<ASTNode>();
+	}
+	ULTIMO OPEN_SQUARE_BRACKET ( math { body.add($math.node); } )* CLOSE_SQUARE_BRACKET
+	{
+		$node = new Ultimo(body); 
+	}
+; 
+
+
+enesimo returns [ASTNode node]:
+	{
+		List<ASTNode> body = new ArrayList<ASTNode>();
+	}
+	ELEMENTO eneEle=math OPEN_SQUARE_BRACKET ( val=math { body.add($val.node); } )* CLOSE_SQUARE_BRACKET
+	{
+		$node = new Elemento($eneEle.node,body); 
+	}
+;
+
+primero returns [ASTNode node]:
+	{
+		List<ASTNode> body = new ArrayList<ASTNode>();
+	}
+	PRIMERO OPEN_SQUARE_BRACKET ( math { body.add($math.node); } )* CLOSE_SQUARE_BRACKET
+	{
+		$node = new Primero(body); 
+	}
+;
  
 math returns [ASTNode node]:
 	t1=mathFactor {$node = $t1.node;} 
@@ -671,6 +750,15 @@ INIC: 'Inic';
 INC: 'Inc';
 //VAR TOKENS
 
+//LIST TOKENS
+ELEGIR: 'Elegir'; 
+CUENTA: 'Cuenta';
+ULTIMO: 'Ultimo';
+ELEMENTO: 'Elemento';
+PRIMERO: 'Primero';
+//LIST TOKENS
+
+
 // ----------------------------------------ARITMETIC TOKENS-----------------------------------
 SUMA: 'suma';
 DIFERENCIA: 'diferencia';
@@ -726,7 +814,8 @@ CLOSE_SQUARE_BRACKET: ']';
 //--------------------------------------VAR VALUES TOKENS--------------------------------------
 BOOLEAN: 'true' | 'false';
 
-ID: [a-zA-Z_][a-zA-Z0-9_]*;
+CARACTERES: '_' |'&'| '-'| '@';
+ID: [a-z]([a-zA-Z0-9]|CARACTERES)*;
 
 STRING: '"' ~('"')* '"';
 NUMBER: [0-9]+;

@@ -1,28 +1,5 @@
 //Esto es un comentario
 
-av 50
+Haz &-@um 10
 
-//Dibuja un sol en el cielo 
-
-
-PARA sol[] [
-
-	subelapiz
-
-	pony 180
-
-	ponx -60
-
-	bajalapiz 
-
-	poncolorlapiz amarillo
-
-	repite(360)[
-		av 150
-		gd 100
-	]
-]
-
-FIN
-
-sol []
+println &-@um
