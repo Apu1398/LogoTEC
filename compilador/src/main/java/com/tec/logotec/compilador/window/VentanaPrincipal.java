@@ -28,6 +28,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
+import javax.swing.JTextArea;
 
 import java.awt.TextArea;
 import javax.swing.JLabel;
@@ -38,12 +39,16 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.Element;
 
 public class VentanaPrincipal {
 
 	public JFrame frmLogotec;
-	private TextArea consoleOutputComponent, codeEditingComponent;
+	private TextArea consoleOutputComponent;
+	private JTextArea codeEditingComponent;
 
 	private World theWorld;
 	private Turtle theTurtle;
@@ -105,12 +110,54 @@ public class VentanaPrincipal {
 		separator.setBounds(10, 476, 528, 2);
 		frmLogotec.getContentPane().add(separator);
 
-		TextArea txtCodigo = new TextArea();
+		/*TextArea txtCodigo = new TextArea();
 		txtCodigo.setFont(new Font("Calibri", Font.PLAIN, 13));
 		txtCodigo.setText("//Esto es un comentario");
 		codeEditingComponent = txtCodigo;
 		txtCodigo.setBounds(10, 10, 516, 426);
-		frmLogotec.getContentPane().add(txtCodigo);
+		frmLogotec.getContentPane().add(txtCodigo);*/
+		
+		JScrollPane jspLines = new JScrollPane();
+		
+		JTextArea jta = new JTextArea();
+		jta.setFont(new Font("Arial", Font.PLAIN, 14));
+		codeEditingComponent = jta;
+		JTextArea lines = new JTextArea("1");
+ 
+		lines.setBackground(Color.LIGHT_GRAY);
+		lines.setEditable(false);
+ 
+		jta.getDocument().addDocumentListener(new DocumentListener(){
+			public String getText(){
+				int caretPosition = jta.getDocument().getLength();
+				Element root = jta.getDocument().getDefaultRootElement();
+				String text = "1" + System.getProperty("line.separator");
+				for(int i = 2; i < root.getElementIndex( caretPosition ) + 2; i++){
+					text += i + System.getProperty("line.separator");
+				}
+				return text;
+			}
+			@Override
+			public void changedUpdate(DocumentEvent de) {
+				lines.setText(getText());
+			}
+ 
+			@Override
+			public void insertUpdate(DocumentEvent de) {
+				lines.setText(getText());
+			}
+ 
+			@Override
+			public void removeUpdate(DocumentEvent de) {
+				lines.setText(getText());
+			}
+ 
+		});
+		jspLines.setViewportView(jta);
+		jspLines.setRowHeaderView(lines);
+		jspLines.setBounds(0, 0, 526, 431);
+		jspLines.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		frmLogotec.getContentPane().add(jspLines);
 
 		TextArea txtConsola = new TextArea();
 		consoleOutputComponent = txtConsola;

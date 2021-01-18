@@ -2,7 +2,6 @@ package com.tec.logotec.compilador.ast;
 
 import java.util.List;
 
-import com.tec.logotec.compilador.window.CompilerState;
 
 public class Repite implements ASTNode {
 

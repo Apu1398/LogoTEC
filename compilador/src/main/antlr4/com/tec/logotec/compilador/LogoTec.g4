@@ -121,8 +121,8 @@ var_init returns [ASTNode node]:
 
 var_assignment returns [ASTNode node]: 
 	INIC ID ASSIGN type 
-	{
-		$node = new VarAssignment($ID.text, $type.node);
+	{	
+		$node = new VarAssignment($ID.text, $type.node, consoleOutput, $INIC.getLine());
 	}
 ;
 
@@ -132,8 +132,7 @@ var_inc returns [ASTNode node]:
 	ID math
 	CLOSE_SQUARE_BRACKET
 	{
-		$node = new VarInc($ID.text,$math.node);
-		
+		$node = new VarInc($ID.text,$math.node);		
 	}
 ;
 
@@ -596,7 +595,7 @@ enesimo returns [ASTNode node]:
 	}
 	ELEMENTO eneEle=math OPEN_SQUARE_BRACKET ( val=math { body.add($val.node); } )* CLOSE_SQUARE_BRACKET
 	{
-		$node = new Elemento($eneEle.node,body, consoleOutput); 
+		$node = new Elemento($eneEle.node,body, consoleOutput, $ELEMENTO.getLine()); 
 	}
 ;
 

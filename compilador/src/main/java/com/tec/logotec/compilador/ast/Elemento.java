@@ -10,13 +10,14 @@ public class Elemento implements ASTNode {
 	private List<ASTNode> mathExpressions;
 	private ASTNode enesimo;
 	private TextArea console;
-	
+	private int line;
 
-	public Elemento(ASTNode enesimo, List<ASTNode> mathExpressions, TextArea console) {
+	public Elemento(ASTNode enesimo, List<ASTNode> mathExpressions, TextArea console, int line) {
 		super();
 		this.mathExpressions = mathExpressions;
 		this.enesimo = enesimo;
 		this.console = console;
+		this.line = line;
 	}
 	
 	
@@ -34,7 +35,7 @@ public class Elemento implements ASTNode {
 			} else {
 
 				CompilerState.errorDetected();
-				console.setText("Indexout Error\n");
+				console.setText("Line " + line + ": Index Out of Range \n");
 				return null;
 			}
 		}
