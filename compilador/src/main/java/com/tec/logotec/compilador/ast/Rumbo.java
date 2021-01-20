@@ -4,11 +4,13 @@ import com.tec.logotec.compilador.turtle.Turtle;
 
 public class Rumbo implements ASTNode {
 	private Turtle theTurtle;
+	public int rumbo;
 	
 	
 	public Rumbo(Turtle turtle) {
 		super();
 		this.theTurtle = turtle;
+		this.rumbo = (int )Math.round(theTurtle.getHeading());
 	}
 
 

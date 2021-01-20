@@ -84,6 +84,7 @@ statement returns [ASTNode node]:
 	| poncolorlapiz     {$node = $poncolorlapiz.node;  }
 	| centro            {$node = $centro.node;         }
 	| espera            {$node = $espera.node;         }
+	| borrapantalla     {$node = $borrapantalla.node;  }
 ;
 
 function returns [ASTNode node]:
@@ -281,6 +282,7 @@ subelapiz returns [ASTNode node]: SUBELAPIZ {
 			$node = new SubeLapiz(theTurtle);
 };
 
+
 poncolorlapiz returns [ASTNode node]: PONCOLORLAPIZ COLOR {
 	        $node = new PonColorLapiz($COLOR.text,theTurtle);
 };
@@ -288,7 +290,7 @@ poncolorlapiz returns [ASTNode node]: PONCOLORLAPIZ COLOR {
 centro returns [ASTNode node]: CENTRO {
 	        $node = new Centro(theTurtle);
 };	  
-
+ 
 espera returns [ASTNode node]: ESPERA math {
 			$node = new Espera($math.node, theTurtle);
 }; 
@@ -303,6 +305,10 @@ ocultatortuga returns [ASTNode node]: OCULTA {
 
 aparecetortuga returns [ASTNode node]: APARECE {
 			$node = new ApareceTortuga(theTurtle);
+};
+
+borrapantalla returns [ASTNode node]: BORRAPANTALLA {
+			$node = new BorraPantalla(theWorld, theTurtle);
 };
 
 /*-------------------------------------------TURTLE EXPRESSIONS------------------------------------------*/
@@ -427,6 +433,11 @@ mathFunction returns [ASTNode node]:
 		menos
 		{
 			$node = $menos.node;
+		}
+		|
+		resto
+		{
+			$node = $resto.node;
 		}
 		|
 		elegir
@@ -554,6 +565,18 @@ menos returns [ASTNode node]:
 			$node = new Menos($t1.node);
 		}
 ;
+
+resto returns [ASTNode node]: 
+		RESTO
+		PAR_OPEN 
+		(t1= math)
+		(t2= math )
+		PAR_CLOSE
+		{
+			$node = new Resto($t1.node, $t2.node);
+		}
+; 
+ 
  
  
 elegir returns [ASTNode node]:
@@ -643,6 +666,10 @@ numberTerm returns [ASTNode node]:
 	|MINUS NUMBER 
 	{
 		$node = new Constant(-Integer.parseInt($NUMBER.text));
+	}	
+	|RUMBO
+	{
+		$node = new Constant(theTurtle.getHeading());
 	}
 	|PAR_OPEN 
 	math { $node = $math.node; }
@@ -706,7 +733,7 @@ DEFINE: 'PARA';
 END_DEFINE: 'FIN';
 //FUNCTIONS TOKEN
 
-PRINTLN: 'println';
+PRINTLN: 'println' | 'muestra' | 'salida';
 
 
 //Turtle TOKENS
@@ -728,7 +755,8 @@ CENTRO: 'centro';
 ESPERA: 'espera';
 APARECE: 'aparecetortuga' | 'at';
 OCULTA: 'ocultatortuga' | 'ot';
-COLOR: 'blanco' | 'azul' | 'marron' | 'cian' | 'gris' | 'amarillo' | 'negro' | 'rojo' | 'verde';
+COLOR: 'blanco' | 'azul' | 'marron' | 'cian' | 'gris' | 'amarillo' | 'negro' | 'rojo' | 'verde' |'morado' |'naranja';
+BORRAPANTALLA: 'borrapantalla';
 //Turtle TOKENS
 
 
@@ -766,6 +794,7 @@ POTENCIA: 'potencia';
 AZAR : 'azar';
 REDONDEA: 'redondea';
 MENOS: 'menos';
+RESTO: 'resto';
 
 PLUS: '+';
 MINUS: '-';
@@ -813,7 +842,7 @@ CLOSE_SQUARE_BRACKET: ']';
 BOOLEAN: 'true' | 'false';
 
 CARACTERES: '_' |'&'| '-'| '@';
-ID: [a-z][a-zA-Z0-9_&-@]?[a-zA-Z0-9_&-@]?[a-zA-Z0-9_&-@]?[a-zA-Z0-9_]?[a-zA-Z0-9_]?[a-zA-Z0-9_]?[a-zA-Z0-9_]?[a-zA-Z0-9_]?[a-zA-Z0-9_]?;
+ID: [a-zA-Z_][a-zA-Z0-9]?[a-zA-Z0-9]?[a-zA-Z0-9]?[a-zA-Z0-9]?[a-zA-Z0-9]?[a-zA-Z0-9]?[a-zA-Z0-9]?[a-zA-Z0-9]?[a-zA-Z0-9]?;
 
 STRING: '"' ~('"')* '"';
 NUMBER: [0-9]+;

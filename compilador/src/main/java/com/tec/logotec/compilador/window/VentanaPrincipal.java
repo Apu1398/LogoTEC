@@ -123,6 +123,7 @@ public class VentanaPrincipal {
 		jta.setFont(new Font("Arial", Font.PLAIN, 14));
 		codeEditingComponent = jta;
 		JTextArea lines = new JTextArea("1");
+		lines.setFont(new Font("Arial", Font.PLAIN, 14));
  
 		lines.setBackground(Color.LIGHT_GRAY);
 		lines.setEditable(false);
@@ -176,10 +177,11 @@ public class VentanaPrincipal {
 
 		// Se añade el panel de tortuga
 
-		theWorld = new World(774, 680, new Color(255, 255, 255));
+		theWorld = new World(774, 680, new Color(0, 0, 0));
 		theWorld.setSize(774, 680);
 		theWorld.setLocation(550, 0);
 		theTurtle = new Turtle(theWorld);
+		theTurtle.setColor(new Color(255,255,255));
 		frmLogotec.getContentPane().add(theWorld);
 
 		JButton btnAbrir = new JButton("Open");
@@ -402,8 +404,10 @@ public class VentanaPrincipal {
 				break;
 
 			}
+			
+			
 
-			String tmp = terminal.replace("//", "").replace("/*", "").replace("*/", "").replace(" ", "_").replace("\n", "").replace("\t", "").replace("\r","").replace(":", "");
+			String tmp = terminal.replace("//", "").replace("/*", "").replace("*/", "").replace(" ", "_").replace("\n", "").replace("\t", "").replace("\r","").replace(":", "").replace(";", "").replace("\"","" );
 			gv.addln(id + " [label = " + tmp + "];");
 			gv.addln(parent + " -> " + id + ";");
 			
@@ -422,6 +426,8 @@ public class VentanaPrincipal {
 		theTurtle.putPenDown();
 		theTurtle.setShellSize(8);
 		theTurtle.setDelay(0);
+		theTurtle.setColor(new Color(255,255,255));
+		theTurtle.setHeading(0);
 
 		LogoTecLexer lexer = new LogoTecLexer(new ANTLRFileStream(program));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);

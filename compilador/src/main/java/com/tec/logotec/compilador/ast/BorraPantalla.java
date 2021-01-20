@@ -2,28 +2,29 @@ package com.tec.logotec.compilador.ast;
 import com.tec.logotec.compilador.window.CompilerState;
 
 import com.tec.logotec.compilador.turtle.Turtle;
+import com.tec.logotec.compilador.turtle.World;
 
-public class Espera implements ASTNode {
+public class BorraPantalla implements ASTNode {
 	
-	private ASTNode data;
 	private Turtle theTurtle;
+	private World theWorld;
 	
 	
 
-	public Espera(ASTNode data, Turtle turtle) {
+	public BorraPantalla(World theWorld, Turtle theTurtle) {
 		super();
-		this.data = data;
-		this.theTurtle = turtle;
+		this.theTurtle = theTurtle;
+		this.theWorld = theWorld;
 	}
 
 
 
 	@Override
 	public Object execute(Context symbolTable) {
-		int movement = (int)data.execute(symbolTable);
+		
 		if (CompilerState.getCompilerStatus() && CompilerState.canIDoSomething()) {
-			//theTurtle.setDelay(movement/60);
-			//theTurtle.pause();
+			theWorld.eraseGround();
+			theWorld.turtleMoved();
 		}		
 		return null;
 	}

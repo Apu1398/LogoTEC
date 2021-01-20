@@ -43,7 +43,7 @@ public class World extends JInternalFrame {
 	 * Creates a new World for Turtles to play in.
 	 */
 	public World() {
-		this(600, 600, Color.WHITE);
+		this(600, 600, Color.BLACK);
 	}
 	public World(int width, int height, Color backgroundColor) {
 		super("Turtle World");
@@ -144,7 +144,7 @@ public class World extends JInternalFrame {
 	/**
 	 * Should only called by Turtle class methods 
 	 */
-	void turtleMoved() {
+	public void turtleMoved() {
 		// show the drawn lines
 		this.clearOverlay();
 		// add the turtles over top

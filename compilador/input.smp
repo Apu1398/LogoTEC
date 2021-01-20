@@ -1,3 +1,34 @@
-//Hola como estas
+//Figurita
 
-av Elemento 2 [0 1]
+PARA figura[angle side limit]
+[
+	Haz reverse 200
+	av side
+	SiSino (resto(side reverse*2) == 0)[
+		Inic angle = angle +2
+		]
+		[ Si (resto (side reverse) == 0)[
+			Inic angle = angle -2
+			]
+		]
+	gd angle
+	Inc[ side 2]
+	Si (side<limit)[
+		Haz num side
+		Si(side >0 && side <= 100)[poncolorlapiz azul]
+		Si(side >100 && side <=200)[poncolorlapiz negro]
+		Si(side >200 && side  <=300)[poncolorlapiz azul]
+		Si(side>300 && side <= 400)[poncolorlapiz negro]
+		Si(side>400 && side  <=500)[poncolorlapiz azul]
+		Si(side>500 && side  <=600)[poncolorlapiz negro]
+		figura [angle side limit]]
+]
+FIN
+
+Haz angle 119
+Haz side 0
+Haz limit 600
+
+figura[angle side limit]
+
+ocultatortuga
